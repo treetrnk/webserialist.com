@@ -56,7 +56,7 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-class Story(db.Model):
+class Fiction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     subtitle = db.Column(db.String(150))
@@ -64,10 +64,10 @@ class Story(db.Model):
     cover_img = db.Column(db.String(500))
     banner_img = db.Column(db.String(500))
     genres = db.relationship('Genre', secondary=genres, lazy='subquery', 
-            backref=db.backref('stories', lazy=True))
+            backref=db.backref('fictions', lazy=True))
     words = db.Column(db.Integer, default=0)
     website = db.Column(db.String(300), nullable=False)
-    author_placeholder = db.Column(db.String(100)) # For unclaimed stories
+    author_placeholder = db.Column(db.String(100)) # For unclaimed fictions
     author_id = db.Column('User', db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.String(75), nullable=False)
     frequency = db.Column(db.Float) # releases per month
@@ -91,7 +91,7 @@ class Rating(db.Model):
     subject = db.Column(db.String(150))
     comment = db.Column(db.String(5000))
     user_id = db.Column('User', db.ForeignKey('user.id'), nullable=False)
-    story_id = db.Column('Story', db.Foreign('story.id'), nullable=False)
+    fiction_id = db.Column('Fiction', db.Foreign('fiction.id'), nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         on_update=datetime.utcnow, nullable=False)
@@ -101,7 +101,7 @@ class Vote(db.Model):
     user_id = db.Column('User', db.ForeignKey('user.id'), nullable=False)
     ip_address = db.Column(db.String(50), nullable=False)
     user_agent = db.Column(db.String(250))
-    story_id = db.Column('Story', db.Foreign('story.id'), nullable=False)
+    fiction_id = db.Column('Fiction', db.Foreign('fiction.id'), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         on_update=datetime.utcnow, nullable=False)
 
