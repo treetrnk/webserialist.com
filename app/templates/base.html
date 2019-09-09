@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang='en'>
 	<head>
-		<title>{% if page %}{{ page.title }} - Web Fiction Guide.com</title>
+		<title>{% if page %}{{ page.title }}{% endif %} - Web Fiction Guide.com</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!--
 		{% if page %}
-		-->
 			<meta name="description" content="{{ page.description() }}" />
 
 			<!-- Schema.org markup for Google+ -->
@@ -34,17 +32,13 @@
 			<meta property="article:section" content="{{ page.section_name() }}" />
 			<meta property="article:tag" content="{{ page.tags }}" />
 			<meta property="fb:admins" content="Facebook numberic ID" />
-			<!--
 		{% endif %}
-			-->
 
-		<!--
 		{% if page and page.slug == "admin" %}
 			<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-admin.png') }}" type="image/x-icon">
 		{% else %}
 			<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon2.png') }}" type="image/x-icon">
 		{% endif %}
-		-->
 		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 		<link href="{{ url_for('static', filename='datatables/datatables.min.css') }}" rel="stylesheet" media="screen">
@@ -67,6 +61,9 @@
 			.navbar .navbar-brand small {
 				font-size: 60%;
 			}
+			.navbar.fixed-top .nav-link {
+				color: #000;
+			}
 			body {
 				margin-top: 100px;
 			}
@@ -82,7 +79,7 @@
 				{% endif %}
 			}
 
-			{# if session['theme'] == 'dark' %}
+			{# if session['theme'] == 'dark' #}
 				body {
 					background-color: #1c1c1c;
 					color: #aaa;
@@ -127,7 +124,7 @@
 				.dataTables_wrapper .dataTables_paginate {
 					color: #aaa;
 				}
-			{% endif #}
+			{# endif #}
 			*/
 		</style>
 
@@ -138,9 +135,9 @@
 		<progress value="0" data-toggle="tooltip" data-placement="bottom" title="Reading Progress"></progress>
 		-->
 
-		<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-blue" id='topNavbar'>
+		<nav class="navbar fixed-top navbar-expand-lg navbar-light" id='topNavbar'>
 			<div class="container">
-				<a href="{{ url_for('page.home') }}" class='navbar-brand'>
+				<a href="{{ url_for('fiction.index') }}" class='navbar-brand'>
 					Web Fiction Guide<br />
 					<small class="text-muted mt-0">Guiding you to the internet's best stories</small>
 				</a>
@@ -157,7 +154,7 @@
 						<li class="nav-item">
 							<a href="" class="nav-link">
 								<i class="fas fa-book"></i>
-								Top Fictions
+								Fictions
 							</a>
 						</li>
 						<li class="nav-item">
@@ -172,7 +169,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="{{ url_for('page.search') }}" class="nav-link" data-toggle='tooltip' title='Search'>
+							<a href="{# url_for('page.search') #}" class="nav-link" data-toggle='tooltip' title='Search'>
 								<i class="fas fa-search"></i>
 								<span class="d-inline d-sm-inline d-md-none">Search</span>
 							</a>
@@ -243,22 +240,8 @@
 			{% endwith %}
 			-->
 
-			<!--
 			{% block content %}
 			{% endblock %}
-			-->
-
-			<p>
-				 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. Proin eu mattis odio. Integer facilisis dignissim purus eget aliquet. Vivamus blandit eros leo, eu sagittis odio facilisis at. Sed porta neque eu volutpat fermentum. Fusce gravida imperdiet semper. Proin ut tellus pulvinar, lacinia erat eu, ornare lorem. Praesent faucibus mauris eget lacus pulvinar tincidunt. Curabitur eu tortor a nisl sagittis vestibulum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc ac purus facilisis, convallis turpis id, tempor dolor. Sed bibendum lorem nisl, a congue lectus eleifend pellentesque.
-			</p>
-			<p>
-				 Etiam non turpis placerat, suscipit ante quis, luctus lectus. Quisque vitae massa at ipsum aliquam tempus. Fusce aliquet leo ac arcu vestibulum pretium. Vivamus non mollis orci, vel imperdiet ex. Quisque metus purus, fringilla sed mi vel, placerat consectetur leo. Nam eleifend lorem ut nibh finibus, vel condimentum enim suscipit. Mauris suscipit sollicitudin tortor in tincidunt. Nullam vel tincidunt risus, eu aliquam urna. Mauris eget urna faucibus, venenatis quam vel, porta nibh. Sed posuere diam cursus diam vestibulum finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce sit amet facilisis felis, sit amet volutpat massa. Donec et est nec purus facilisis porttitor. Sed ut dui vel arcu consectetur porttitor et a magna.
-			</p>
-			<p>
-				 Aenean id aliquet mi, fringilla tempus purus. Aenean eget dictum ex, ac fringilla erat. Etiam vitae arcu a sem tincidunt tincidunt lobortis non sem. Curabitur congue maximus auctor. Nunc et elit id dui vehicula suscipit. Mauris tempus enim eu arcu ullamcorper volutpat. Sed tincidunt congue venenatis. Phasellus eu consequat turpis. Mauris et diam metus. Donec at eleifend massa. Etiam sodales nec nulla aliquam volutpat. Nullam elementum ultrices arcu ut dapibus. Integer eu ligula lacinia mi scelerisque imperdiet iaculis nec nibh. Aliquam lorem augue, bibendum sit amet rutrum ac, feugiat at mauris.
-
-
-			</p>
 
 			<br /><br />
     </section>
@@ -270,10 +253,10 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/slugify.js') }}"></script>
-		<script src="{{ url_for('static', filename='datatables/datatables.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+		<script src="{# url_for('static', filename='js/bootstrap.min.js') #}"></script>
+		<script src="{# url_for('static', filename='js/slugify.js') #}"></script>
+		<script src="{# url_for('static', filename='datatables/datatables.min.js') #}"></script>
+		<script src="{# url_for('static', filename='js/select2.min.js') #}"></script>
 		<!--script id="dsq-count-scr" src="//houstonhare.disqus.com/count.js" async></script-->
 		{{ moment.include_moment() }}
 		<script type="text/javascript">
@@ -285,6 +268,6 @@
 			{% endif %}
 
 		</script>
-		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		<script src="{# url_for('static', filename='js/main.js') #}"></script>
 	</body>
 </html>

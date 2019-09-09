@@ -12,7 +12,7 @@ from sqlalchemy import desc
 
 genres = db.Table('genres',
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'), primary_key=True),
-    db.Column('story_id', db.Integer, db.ForeignKey('story.id'), primary_key=True)
+    db.Column('fiction_id', db.Integer, db.ForeignKey('fiction.id'), primary_key=True)
 )
 
 class User(UserMixin, db.Model):
