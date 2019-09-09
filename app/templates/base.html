@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<title>{% if page %}{{ page.title }} - Web Fiction Guide.com</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--
+		{% if page %}
+		-->
+			<meta name="description" content="{{ page.description() }}" />
+
+			<!-- Schema.org markup for Google+ -->
+			<meta itemprop="name" content="{{ page.title }}">
+			<meta itemprop="description" content="{{ page.description() }}">
+			<meta itemprop="image" content="{{ page.banner_path() }}">
+
+			<!-- Twitter Card data -->
+			<meta name="twitter:card" content="summary_large_image">
+			<meta name="twitter:site" content="@webfictionguide">
+			<meta name="twitter:title" content="{{ page.title }}">
+			<meta name="twitter:description" content="{{ page.description() }}">
+			<meta name="twitter:creator" content="@webfictionguide">
+			<!-- Twitter summary card with large image must be at least 280x150px -->
+			<meta name="twitter:image:src" content="{{ page.banner_path() }}">
+
+			<!-- Open Graph data -->
+			<meta property="og:title" content="{{ page.title }}" />
+			<meta property="og:type" content="article" />
+			<meta property="og:url" content="https://webfictionguide.com" />
+			<meta property="og:image" content="{{ page.banner_path() }}" />
+			<meta property="og:description" content="{{ page.description() }}" />
+			<meta property="og:site_name" content="Web Fiction Guide" />
+			<meta property="article:published_time" content="{{ page.pub_date }}" />
+			<meta property="article:modified_time" content="{{ page.pub_date }}" />
+			<meta property="article:section" content="{{ page.section_name() }}" />
+			<meta property="article:tag" content="{{ page.tags }}" />
+			<meta property="fb:admins" content="Facebook numberic ID" />
+			<!--
+		{% endif %}
+			-->
+
+		<!--
+		{% if page and page.slug == "admin" %}
+			<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-admin.png') }}" type="image/x-icon">
+		{% else %}
+			<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon2.png') }}" type="image/x-icon">
+		{% endif %}
+		-->
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+		<link href="{{ url_for('static', filename='datatables/datatables.min.css') }}" rel="stylesheet" media="screen">
+		<link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet" media="screen">
+		<!---<link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet">
+    <script src="https://use.fontawesome.com/0dabb168cf.js"></script>--->
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Cinzel|Comfortaa|Questrial|Righteous&display=swap" rel="stylesheet">
+
+		<style>
+			.navbar {
+				background-color: rgba(255,255,255,0.9)
+			}
+			.navbar .navbar-brand {
+				font-family: 'Comfortaa', cursive;
+				line-height: 20px;
+			}
+			.navbar .navbar-brand small {
+				font-size: 60%;
+			}
+			body {
+				margin-top: 100px;
+			}
+			/*
+			div.jumbotron {
+				{% if not page or page.template == 'page' or page.template == 'blog' %}
+					height: 280px;
+				{% else %}
+					height: 500px;
+				{% endif %}
+				{% if page and page.banner_path() %}
+					background-image: url({{ page.banner_path() }});
+				{% endif %}
+			}
+
+			{# if session['theme'] == 'dark' %}
+				body {
+					background-color: #1c1c1c;
+					color: #aaa;
+				}
+				.card {
+					background-color: #222;
+					color: #aaa;
+				}
+				.modal-content {
+					background-color: #222;
+					color: #aaa;
+				}
+				section.content-wrapper {
+					background-color: #222;
+					color: #aaa;
+				}
+				ol.breadcrumb {
+					background-color: #333;
+				}
+				.table td, .table th {
+					border-top: 1px solid #1c1c1c;
+				}
+				table.dataTable tbody tr {
+					background-color: #2a2a2a;
+				}
+				table.dataTable tbody tr:hover {
+					background-color: #333;
+				}
+				input, textarea, button, select, .form-control {
+					background-color: #333;
+					color: #aaa;
+				}
+				.form-control:focus {
+					background-color: #111;
+					color: #aaa;
+				}
+				.dataTables-wrapper label, .dataTables_info ,
+				.dataTables_wrapper .dataTables_length, 
+				.dataTables_wrapper .dataTables_filter, 
+				.dataTables_wrapper .dataTables_info, 
+				.dataTables_wrapper .dataTables_processing, 
+				.dataTables_wrapper .dataTables_paginate {
+					color: #aaa;
+				}
+			{% endif #}
+			*/
+		</style>
+
+	</head>
+	<body>
+
+		<!--
+		<progress value="0" data-toggle="tooltip" data-placement="bottom" title="Reading Progress"></progress>
+		-->
+
+		<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-blue" id='topNavbar'>
+			<div class="container">
+				<a href="{{ url_for('page.home') }}" class='navbar-brand'>
+					Web Fiction Guide<br />
+					<small class="text-muted mt-0">Guiding you to the internet's best stories</small>
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a href="" class="nav-link">
+								<i class="fas fa-home"></i>
+								Home
+							</a>
+						<li class="nav-item">
+							<a href="" class="nav-link">
+								<i class="fas fa-book"></i>
+								Top Fictions
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="" class="nav-link">
+								<i class="fas fa-comments"></i>
+								Forum
+							</a>
+						<li class="nav-item">
+							<a href="" class="nav-link">
+								<i class="fas fa-user-cog"></i>
+								Account
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{{ url_for('page.search') }}" class="nav-link" data-toggle='tooltip' title='Search'>
+								<i class="fas fa-search"></i>
+								<span class="d-inline d-sm-inline d-md-none">Search</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Modal -->
+		<div class="modal fade" id="searchMod" tabindex="-1" role="dialog" aria-labelledby="searchModLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form action="/search/" method="get">
+							<div class="input-group">
+								<input type="text" name="s" placeholder="Search" class="form-control" id="searchInput" />
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+								</span>
+							</div>
+							{# getAllTags #}
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<section class="container content-wrapper">
+			<!--
+			{% if page and page.parent_id %}
+				<ol class="breadcrumb mb-5">
+					{% for parent in page.ancestors()[::-1] %}
+						<li class="breadcrumb-item"><a href="{{ parent.path }}">{{ parent.title }}</a></li>
+					{% endfor %}
+					<li class="breadcrumb-item active">{{ page.title }}</li>
+				</ol>
+			{% else %}
+				<br />
+			{% endif %}
+			{# $page->breadcrumbs() #}
+
+			{% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+							{% if category != "message" %}
+								<div class="alert alert-{{ category }}" role="alert">
+									{% if category == 'success' %}
+										<b><i class="fas fa-check-circle"></i> Success!</b>
+									{% elif category == 'info' %}
+										<b><i class="fas fa-info-circle"></i> Info!</b>
+									{% elif category == 'warning' %}
+										<b><i class="fas fa-exclamation-triangle"></i> Warning!</b>
+									{% elif category == 'danger' %}
+										<b><i class="fas fa-exclamation-circle"></i> Error!</b>
+									{% endif %}
+									{{ message|safe }}
+								</div>
+							{% else %}
+								<div class="alert alert-warning" role="alert">
+									<b><i class="fas fa-exclamation-triangle"></i> Warning!</b>
+									{{ message|safe }}
+								</div>
+							{% endif %}
+            {% endfor %}
+        {% endif %}
+			{% endwith %}
+			-->
+
+			<!--
+			{% block content %}
+			{% endblock %}
+			-->
+
+			<p>
+				 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. Proin eu mattis odio. Integer facilisis dignissim purus eget aliquet. Vivamus blandit eros leo, eu sagittis odio facilisis at. Sed porta neque eu volutpat fermentum. Fusce gravida imperdiet semper. Proin ut tellus pulvinar, lacinia erat eu, ornare lorem. Praesent faucibus mauris eget lacus pulvinar tincidunt. Curabitur eu tortor a nisl sagittis vestibulum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc ac purus facilisis, convallis turpis id, tempor dolor. Sed bibendum lorem nisl, a congue lectus eleifend pellentesque.
+			</p>
+			<p>
+				 Etiam non turpis placerat, suscipit ante quis, luctus lectus. Quisque vitae massa at ipsum aliquam tempus. Fusce aliquet leo ac arcu vestibulum pretium. Vivamus non mollis orci, vel imperdiet ex. Quisque metus purus, fringilla sed mi vel, placerat consectetur leo. Nam eleifend lorem ut nibh finibus, vel condimentum enim suscipit. Mauris suscipit sollicitudin tortor in tincidunt. Nullam vel tincidunt risus, eu aliquam urna. Mauris eget urna faucibus, venenatis quam vel, porta nibh. Sed posuere diam cursus diam vestibulum finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce sit amet facilisis felis, sit amet volutpat massa. Donec et est nec purus facilisis porttitor. Sed ut dui vel arcu consectetur porttitor et a magna.
+			</p>
+			<p>
+				 Aenean id aliquet mi, fringilla tempus purus. Aenean eget dictum ex, ac fringilla erat. Etiam vitae arcu a sem tincidunt tincidunt lobortis non sem. Curabitur congue maximus auctor. Nunc et elit id dui vehicula suscipit. Mauris tempus enim eu arcu ullamcorper volutpat. Sed tincidunt congue venenatis. Phasellus eu consequat turpis. Mauris et diam metus. Donec at eleifend massa. Etiam sodales nec nulla aliquam volutpat. Nullam elementum ultrices arcu ut dapibus. Integer eu ligula lacinia mi scelerisque imperdiet iaculis nec nibh. Aliquam lorem augue, bibendum sit amet rutrum ac, feugiat at mauris.
+
+
+			</p>
+
+			<br /><br />
+    </section>
+
+		<footer class="text-muted small">
+			<p class="text-center">&#169; Copyright 2019, WebFictionGuide.com </a>
+		</footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/slugify.js') }}"></script>
+		<script src="{{ url_for('static', filename='datatables/datatables.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+		<!--script id="dsq-count-scr" src="//houstonhare.disqus.com/count.js" async></script-->
+		{{ moment.include_moment() }}
+		<script type="text/javascript">
+			
+			{% if page %}
+				var postType = "{{ page.template }}";
+			{% else %}
+				var postType = "page";
+			{% endif %}
+
+		</script>
+		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	</body>
+</html>
