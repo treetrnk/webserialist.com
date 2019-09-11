@@ -1,6 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class='float-right'>
+	<div class='row'>
+		<label class="col-from-label col-md-3 mt-2 text-right">Source:</label>
+		<div class="col">
+			<select class="form-control">
+				<option value=''>Private Websites</option>
+				<option value=''>Wattpad</option>
+				<option value=''>RoyalRoad</option>
+				<option value=''>ScribbleHub</option>
+				<option value=''>All</option>
+			</select>
+		</div>
+	</div>
+</div>
+
 <h1 class="mb-4">Top Stories</h1>
 
 {% for fiction in fictions %}
@@ -13,7 +28,7 @@
 			{% endif %}
 		</div>
 		<div class="col">
-			<a href="">
+			<a href="{{ fiction.website }}">
 				<h3>
 					{{ fiction.title }}
 					{% if fiction.subtitle %}
