@@ -5,7 +5,7 @@
 
 {% for fiction in fictions %}
 	<div class="row">
-		<div class="col-2">
+		<div class="col-1">
 			{% if fiction.cover %}
 				<img src="{{ fiction.cover }}" width="100%" />
 			{% else %}
@@ -14,13 +14,22 @@
 		</div>
 		<div class="col">
 			<a href="">
-				<h3>{{ fiction.title }}</h3>
+				<h3>
+					{{ fiction.title }}
+					{% if fiction.subtitle %}
+						<small class="text-muted">{{ fiction.subtitle }}</small>
+					{% endif %}
+				</h3>
 			</a>
+			<p class="text-muted">
+				By: {{ fiction.author.display_name() }}
+			</p>
 			<p>	
-					 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. Proin eu mattis odio. Integer facilisis dignissim purus eget aliquet. Vivamus blandit eros leo, eu sagittis odio facilisis at. Sed porta neque eu volutpat fermentum. Fusce gravida imperdiet semper. 
+					 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. 
 			</p>
 		</div>
 	</div>
+	<hr width="90%" />
 {% endfor %}
 
 {% endblock %}
