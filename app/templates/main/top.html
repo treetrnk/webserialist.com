@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="mb-4">Top Stories</h1>
+
+{% for fiction in fictions %}
+	<div class="row">
+		<div class="col-2">
+			{% if fiction.cover %}
+				<img src="{{ fiction.cover }}" width="100%" />
+			{% else %}
+				<img src="https://cor-cdn-static.bibliocommons.com/assets/default_covers/icon-book-93409e4decdf10c55296c91a97ac2653.png" class="img-responsive" width="100%"/>
+			{% endif %}
+		</div>
+		<div class="col">
+			<a href="">
+				<h3>{{ fiction.title }}</h3>
+			</a>
+			<p>	
+					 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. Proin eu mattis odio. Integer facilisis dignissim purus eget aliquet. Vivamus blandit eros leo, eu sagittis odio facilisis at. Sed porta neque eu volutpat fermentum. Fusce gravida imperdiet semper. 
+			</p>
+		</div>
+	</div>
+{% endfor %}
+
+{% endblock %}
