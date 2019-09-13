@@ -12,7 +12,7 @@ required = "<span class='text-danger'>*</span>"
 
 class SignupForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(max=64)])
-    first_name = StringField('First Name' validators=[Length(max=100)])
+    first_name = StringField('First Name', validators=[Length(max=100)])
     last_name = StringField('Last Name', validators=[Length(max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(max=128)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password'), Length(max=128)])
