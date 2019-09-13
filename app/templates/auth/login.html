@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br />
+<div class="row justify-content-md-center">
+	<div class="col-md-5">
+		<div class="card">
+			<h3 class="card-header">Login</h3>
+			<div class="card-body">
+				<form class="form" method="post" action="" />
+					{{ form.csrf_token }}
+					
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-user"></i></span>
+						</div>
+						{% if form.username.errors %}
+							{{ form.username(class="form-control form-control-lg is-invalid",placeholder="Username") }}
+							<div class="invalid-feedback">
+								{% for error in form.username.errors %}
+									<span>{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.username(class="form-control form-control-lg", placeholder="Username") }}
+						{% endif %}
+					</div>
+
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						</div>
+						{% if form.password.errors %}
+							{{ form.password(class="form-control form-control-lg is-invalid", placeholder="Password") }}
+							<div class="invalid-feedback">
+								{% for error in form.password.errors %}
+									<span>{{ error }}</span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.password(class="form-control form-control-lg",placeholder="Password") }}
+						{% endif %}
+					</div>
+
+					<div class="form-group form-check mb-3 text-center">
+							{{ form.remember_me(class="form-check-input") }}
+							{{ form.remember_me.label(class="form-check-label") }}
+					</div>
+
+					{{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
