@@ -219,7 +219,7 @@
 				<br />
 			{% endif %}
 			{# $page->breadcrumbs() #}
-
+			-->
 			{% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -245,7 +245,6 @@
             {% endfor %}
         {% endif %}
 			{% endwith %}
-			-->
 
 			{% block content %}
 			{% endblock %}

@@ -11,11 +11,12 @@ from app.models import User
 required = "<span class='text-danger'>*</span>"
 
 class SignupForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(max=64)])
+    username = StringField(f'Username{required}', validators=[DataRequired(), Length(max=64)])
+    email = StringField(f'Email{required}', validators=[Length(max=120)])
     first_name = StringField('First Name', validators=[Length(max=100)])
     last_name = StringField('Last Name', validators=[Length(max=100)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(max=128)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password'), Length(max=128)])
+    password = PasswordField(f'Password{required}', validators=[DataRequired(), Length(max=128)])
+    confirm_password = PasswordField(f'Confirm Password{required}', validators=[DataRequired(), EqualTo('password'), Length(max=128)])
 
     def validate_username(self, username):
         user = User.query.filter_by(username=self.username.data).first()
