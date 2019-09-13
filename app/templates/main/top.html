@@ -18,33 +18,58 @@
 
 <h1 class="mb-4">Top Stories</h1>
 
-{% for fiction in fictions %}
-	<div class="row">
-		<div class="col-1">
-			{% if fiction.cover %}
-				<img src="{{ fiction.cover }}" width="100%" />
-			{% else %}
-				<img src="https://cor-cdn-static.bibliocommons.com/assets/default_covers/icon-book-93409e4decdf10c55296c91a97ac2653.png" class="img-responsive" width="100%"/>
-			{% endif %}
-		</div>
-		<div class="col">
-			<a href="{{ fiction.website }}">
-				<h3>
-					{{ fiction.title }}
-					{% if fiction.subtitle %}
-						<small class="text-muted">{{ fiction.subtitle }}</small>
+<div class="row">
+	<div class="col-sm-9">
+
+			{% for fiction in fictions %}
+			<div class="row">
+				<div class="col-1">
+					{% if fiction.cover %}
+						<img src="{{ fiction.cover }}" width="100%" />
+					{% else %}
+						<img src="https://cor-cdn-static.bibliocommons.com/assets/default_covers/icon-book-93409e4decdf10c55296c91a97ac2653.png" class="img-responsive" width="100%"/>
 					{% endif %}
-				</h3>
+				</div>
+				<div class="col">
+					<a href="{{ fiction.website }}">
+						<h3>
+							{{ fiction.title }}
+							{% if fiction.subtitle %}
+								<small class="text-muted">{{ fiction.subtitle }}</small>
+							{% endif %}
+						</h3>
+					</a>
+					<p class="text-muted">
+						By: {{ fiction.author.display_name() }}
+					</p>
+					<p>	
+							 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. 
+					</p>
+				</div>
+			</div>
+			<hr width="90%" />
+		{% endfor %}
+	
+	</div>
+	<div class="col-sm-3 col">
+		<div class="list-group">
+			<a href="" class="list-group-item list-group-item-action active">
+				Trending
 			</a>
-			<p class="text-muted">
-				By: {{ fiction.author.display_name() }}
-			</p>
-			<p>	
-					 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. 
-			</p>
+			<a href="" class="list-group-item list-group-item-action">
+				Best Rated
+			</a>
+			<a href="" class="list-group-item list-group-item-action">
+				Popular This Week
+			</a>
+			<a href="" class="list-group-item list-group-item-action">
+				Most Weekly Votes
+			</a>
+			<a href="" class="list-group-item list-group-item-action">
+				Most Viewed
+			</a>
 		</div>
 	</div>
-	<hr width="90%" />
-{% endfor %}
+</div>
 
 {% endblock %}
