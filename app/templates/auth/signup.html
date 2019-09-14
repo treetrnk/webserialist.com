@@ -4,38 +4,38 @@
 <h1>Sign Up!</h1>
 
 <form action="" method="post">
-	{{ form.hidden_tag() }}
+	{{ signup_form.hidden_tag() }}
 
 	<!--USERNAME-->
 	<div class="form-group row mt-4">
-		{{ form.username.label(class="col-sm-2 control-from-label text-md-right") }} 
+		{{ signup_form.username.label(class="col-sm-2 control-from-label text-md-right") }} 
 		<div class="col-sm-8">
-			{% if form.username.errors %}
-				{{ form.username(class="form-control is-invalid") }}
+			{% if signup_form.username.errors %}
+				{{ signup_form.username(class="form-control is-invalid") }}
 				<div class="invalid-feedback">
-					{% for error in form.username.errors %}
+					{% for error in signup_form.username.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.username(class="form-control") }}
+				{{ signup_form.username(class="form-control") }}
 			{% endif %}
 		</div>
 	</div>
 
 	<!--EMAIL-->
 	<div class="form-group row mt-4">
-		{{ form.email.label(class="col-sm-2 control-from-label text-md-right") }} 
+		{{ signup_form.email.label(class="col-sm-2 control-from-label text-md-right") }} 
 		<div class="col-sm-8">
-			{% if form.email.errors %}
-				{{ form.email(class="form-control is-invalid") }}
+			{% if signup_form.email.errors %}
+				{{ signup_form.email(class="form-control is-invalid") }}
 				<div class="invalid-feedback">
-					{% for error in form.email.errors %}
+					{% for error in signup_form.email.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.email(class="form-control") }}
+				{{ signup_form.email(class="form-control") }}
 			{% endif %}
 		</div>
 	</div>
@@ -46,46 +46,46 @@
 			Full Name
 		</label>
 		<div class="col-sm-4">
-			{% if form.first_name.errors %}
-				{{ form.first_name(class="form-control is-invalid", placeholder='First') }}
+			{% if signup_form.first_name.errors %}
+				{{ signup_form.first_name(class="form-control is-invalid", placeholder='First') }}
 				<div class="invalid-feedback">
-					{% for error in form.first_name.errors %}
+					{% for error in signup_form.first_name.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.first_name(class="form-control", placeholder='First') }}
+				{{ signup_form.first_name(class="form-control", placeholder='First') }}
 			{% endif %}
 		</div>
 
 	<!--LAST NAME-->
 		<div class="col-sm-4">
-			{% if form.last_name.errors %}
-				{{ form.last_name(class="form-control is-invalid", placeholder='Last') }}
+			{% if signup_form.last_name.errors %}
+				{{ signup_form.last_name(class="form-control is-invalid", placeholder='Last') }}
 				<div class="invalid-feedback">
-					{% for error in form.last_name.errors %}
+					{% for error in signup_form.last_name.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.last_name(class="form-control", placeholder='Last') }}
+				{{ signup_form.last_name(class="form-control", placeholder='Last') }}
 			{% endif %}
 		</div>
 	</div>
 
 	<!--PASSWORD-->
 	<div class="form-group row mt-4">
-		{{ form.password.label(class="col-sm-2 control-from-label text-md-right") }} 
+		{{ signup_form.password.label(class="col-sm-2 control-from-label text-md-right") }} 
 		<div class="col-sm-8">
-			{% if form.password.errors %}
-				{{ form.password(class="form-control is-invalid") }}
+			{% if signup_form.password.errors %}
+				{{ signup_form.password(class="form-control is-invalid") }}
 				<div class="invalid-feedback">
-					{% for error in form.password.errors %}
+					{% for error in signup_form.password.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.password(class="form-control") }}
+				{{ signup_form.password(class="form-control") }}
 			{% endif %}
 		</div>
 	</div>
@@ -94,15 +94,15 @@
 	<div class="form-group row mt-4">
 		<div class="col-sm-2"></div>
 		<div class="col-sm-8">
-			{% if form.confirm_password.errors %}
-				{{ form.confirm_password(class="form-control is-invalid", placeholder='Confirm Password') }}
+			{% if signup_form.confirm_password.errors %}
+				{{ signup_form.confirm_password(class="form-control is-invalid", placeholder='Confirm Password') }}
 				<div class="invalid-feedback">
-					{% for error in form.confirm_password.errors %}
+					{% for error in signup_form.confirm_password.errors %}
 						{{ error }}
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.confirm_password(class="form-control", placeholder='Confirm Password') }}
+				{{ signup_form.confirm_password(class="form-control", placeholder='Confirm Password') }}
 			{% endif %}
 		</div>
 	</div>

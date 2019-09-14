@@ -24,6 +24,12 @@ class SignupForm(FlaskForm):
             raise ValidationError('Username already in use.', 'danger')
         return True
 
+    def validate_email(self, email):
+        user = User.query.filter_by(email=self.email.data).first()
+        if user is not None:
+            raise ValidationError('Email address already in use.', 'danger')
+        return True
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
