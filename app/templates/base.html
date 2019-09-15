@@ -75,6 +75,9 @@
 				margin-top: 100px;
 				font-family: 'Open Sans', sans-serif;
 			}
+			.text-purple {
+				color: #5f00ad;
+			}
 			/*
 			div.jumbotron {
 				{% if not page or page.template == 'page' or page.template == 'blog' %}
@@ -145,7 +148,7 @@
 
 		<nav class="navbar fixed-top navbar-expand-lg navbar-light" id='topNavbar'>
 			<a href="{{ url_for('main.index') }}" class='navbar-brand'>
-				<i class="fas fa-atlas float-left mr-4" style='font-size:43px;margin-top:-7px;'></i>
+				<i class="fas fa-atlas float-left mr-4 text-purple" style='font-size:43px;margin-top:-7px;'></i>
 				Web Serialist<br />
 				<small class="text-muted mt-0">Guiding you to the internet's best stories</small>
 			</a>
@@ -189,8 +192,8 @@
 									Profile
 								</a>
 								<a class="dropdown-item" href="{# url_for('auth.add_fiction') #}">
-									<i class="fas fa-book-medical"></i>
-									Add Fiction
+									<i class="fas fa-book"></i>
+									My Fictions
 								</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ url_for('auth.logout') }}">

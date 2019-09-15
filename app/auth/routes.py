@@ -75,4 +75,3 @@ def profile(username=None):
             user = user,
             title = f"{user.display_name()}'s Profile",
         )
-
