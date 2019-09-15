@@ -181,13 +181,22 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
 								<i class="fas fa-user-cog"></i>
-								Account
+								{{ current_user.username }}
 							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<a class="dropdown-item" href="#">My Fictions</a>
-								<a class="dropdown-item" href="#">Profile</a>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+									<i class="fas fa-user"></i>
+									Profile
+								</a>
+								<a class="dropdown-item" href="{# url_for('auth.add_fiction') #}">
+									<i class="fas fa-book-medical"></i>
+									Add Fiction
+								</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+								<a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+									<i class="fas fa-lock-open"></i>
+									Logout
+								</a>
 							</div>
 						</li>
 					{% else %}
@@ -275,10 +284,10 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-		<script src="{# url_for('static', filename='js/bootstrap.min.js') #}"></script>
-		<script src="{# url_for('static', filename='js/slugify.js') #}"></script>
-		<script src="{# url_for('static', filename='datatables/datatables.min.js') #}"></script>
-		<script src="{# url_for('static', filename='js/select2.min.js') #}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/slugify.js') }}"></script>
+		<script src="{{ url_for('static', filename='datatables/datatables.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
 		<!--script id="dsq-count-scr" src="//houstonhare.disqus.com/count.js" async></script-->
 		{{ moment.include_moment() }}
 		<script type="text/javascript">
