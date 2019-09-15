@@ -63,3 +63,16 @@ def logout():
     logout_user()
     flash('You are now logged out.', 'success')
     return redirect(url_for('main.top_stories'))
+
+@bp.route("/profile")
+@bp.route("/profile/<string:username>")
+def profile(username=None):
+    if username:
+        user = User.query.filter_by(username=username).first()
+    else: 
+        user = User.query.filter_by(id=current_user.id).first()
+    return render_template('/auth/profile.html',
+            user = user,
+            title = f"{user.display_name()}'s Profile",
+        )
+
