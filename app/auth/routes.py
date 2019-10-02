@@ -31,11 +31,8 @@ def process_signup():
         db.session.add(user)
         db.session.commit()
         flash('Welcome to Web Serialist.com!', 'success')
-        return redirect(url_for('main.top_stories'))
-    return render_template('auth/signup.html',
-            title = 'Sign Up',
-            form = form,
-        )
+        return redirect(url_for('.top_stories'))
+    return redirect(url_for('auth.login'))
 
 
 @bp.route('/process-login', methods=['POST'])
@@ -45,10 +42,10 @@ def process_login():
         user = User.query.filter_by(username=form.username.data).first()
         if not user:
             flash('Invalid username!', 'danger')
-            return redirect(request.url)
+            return redirect(url_for('auth.login'))
         if not user.check_password(form.password.data):
             flash('Invalid password!', 'danger')
-            return redirect(request.url)
+            return redirect(url_for('auth.login'))
         login_user(user)
         flash('You are now logged in.', 'success')
         #next = request.args.get('next')
