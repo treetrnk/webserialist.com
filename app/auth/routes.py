@@ -2,8 +2,9 @@ from flask import render_template, redirect, flash, url_for, request, abort
 from app import db
 from app.auth import bp
 from flask_login import login_required, current_user, login_user, logout_user
-from app.auth.forms import SignupForm, LoginForm
+from app.auth.forms import SignupForm, LoginForm, ProfileEditForm
 from app.models import User
+from app.main.generic_views import SaveObjView, DeleteObjView
 
 # Add routes here
 @bp.route('/signup', methods=['GET', 'POST'])
@@ -72,3 +73,30 @@ def profile(username=None):
             user = user,
             title = f"{user.display_name()}'s Profile",
         )
+
+class EditProfile(SaveObjView):
+    title = "User Settings"
+    model = User
+    form = ProfileEditForm
+    action = 'Edit'
+    log_msg = 'updated their profile'
+    success_msg = 'Profile updated.'
+    delete_endpoint = 'auth.delete_user'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        self.form.theme.choices = [('light','Light'), ('dark','Dark')]
+        self.form.timezone.choices = [('est','EST')]
+
+bp.add_url_rule("/profile/edit/<int:obj_id>", 
+        view_func=EditProfile.as_view('edit_profile'))
+
+class DeleteUser(DeleteObjView):
+    model = User
+    log_msg = 'deleted a user'
+    success_msg = 'User deleted.'
+    redirect = {'endpoint': 'main.index'}
+
+bp.add_url_rule("/profile/delete", 
+        view_func = DeleteUser.as_view('delete_user'))

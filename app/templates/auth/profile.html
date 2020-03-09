@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<a href="{{ url_for('auth.edit_profile', obj_id=user.id) }}" class="btn btn-secondary float-right btn-sm">
+	<i class="fas fa-edit"></i> Edit Profile
+</a>
+
 <h1>{{ user.display_name() }}'s Profile</h1>
 
 <h2>About</h2>

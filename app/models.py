@@ -66,7 +66,7 @@ class Fiction(db.Model):
     words = db.Column(db.Integer, default=0)
     website = db.Column(db.String(300), nullable=False)
     author_placeholder = db.Column(db.String(100)) # For unclaimed fictions
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     author = db.relationship("User", foreign_keys=[author_id], backref='fictions')
     status = db.Column(db.String(75), nullable=False)
     frequency = db.Column(db.Float) # releases per month

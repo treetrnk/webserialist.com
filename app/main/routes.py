@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for
+from flask import render_template, redirect, flash, url_for, current_app
 from app import db
 from app.main import bp
 from flask_login import login_required, current_user
@@ -30,7 +30,11 @@ class AddFiction(SaveObjView):
     success_msg = 'Fiction added.'
     delete_endpoint = 'main.delete_fiction'
     template = 'object-edit.html'
-    redirect = {'endpoint': 'main.profile'}
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        current_app.logger.debug(self.form.__dict__)
+        self.form.status.choices = [('ongoing', 'Ongoing'), ('hiatus','Hiatus')]
 
 bp.add_url_rule("/fiction/add", 
         view_func=AddFiction.as_view('add_fiction'))
@@ -44,7 +48,10 @@ class EditFiction(SaveObjView):
     success_msg = 'Fiction updated.'
     delete_endpoint = 'main.delete_fiction'
     template = 'object-edit.html'
-    redirect = {'endpoint': 'main.profile'}
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        self.form.status.choices = [('ongoing', 'Ongoing'), ('hiatus','Hiatus')]
 
 bp.add_url_rule("/fiction/edit/<int:obj_id>", 
         view_func=EditFiction.as_view('edit_fiction'))

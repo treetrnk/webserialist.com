@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
         StringField, TextAreaField, SelectField, IntegerField, SubmitField, 
         BooleanField, SubmitField, DateTimeField, SelectMultipleField, 
-        PasswordField, HiddenField, DateField, TimeField
+        PasswordField, HiddenField, DateField, TimeField, FileField
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, ValidationError
@@ -35,3 +35,14 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class ProfileEditForm(FlaskForm):
+    username = StringField(f'Username{required}', validators=[DataRequired(), Length(max=64)])
+    email = StringField(f'Email{required}', validators=[Length(max=120), Email()])
+    first_name = StringField('First Name', validators=[Length(max=100)])
+    last_name = StringField('Last Name', validators=[Length(max=100)])
+    avatar = FileField('Avatar', validators=[Length(max=500)])
+    website = StringField('Website', validators=[Length(max=300)])
+    about_me = TextAreaField('About Me', validators=[Length(max=140)])
+    theme = SelectField('Theme', validators=[Length(max=75)])
+    timezone = SelectField('Timezone', validators=[Length(max=150)])
