@@ -1,14 +1,45 @@
+import re
+from markdown import markdown
 from flask import current_app, url_for, session, jsonify, render_template
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from datetime import datetime
 from sqlalchemy import desc
+#from app.main.functions import process_markdown
 
 #tags = db.Table('tags',
 #    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
 #    db.Column('page_id', db.Integer, db.ForeignKey('page.id'), primary_key=True)
 #)
+
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
+
+def remove_complicated_html(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<\/?(h[1-6]|img).*?>')
+    return re.sub(clean, '', text)
+
+def remove_breaks(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<\/?(br|p).*?>')
+    return re.sub(clean, '', text)
+
+def remove_links(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<\/?a.*?>')
+    return re.sub(clean, '', text)
+
+def process_markdown(text):
+    text = remove_html_tags(text)
+    return markdown(text)
 
 genres = db.Table('genres',
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'), primary_key=True),
@@ -23,7 +54,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     avatar = db.Column(db.String(500))
-    about_me = db.Column(db.String(140))
+    about_me = db.Column(db.String(1000))
     website = db.Column(db.String(300))
     theme = db.Column(db.String(75), default='light')
     timezone = db.Column(db.String(150))
@@ -43,6 +74,14 @@ class User(UserMixin, db.Model):
             return f"{self.first_name} {self.last_name}"
         return self.username
 
+    def html(self):
+        output = ''
+        if self.about_me:
+            output =  process_markdown(self.about_me)
+            output = remove_links(output)
+            output = remove_complicated_html(output)
+        return output
+
     def __str__(self):
         return self.username
 
@@ -58,7 +97,7 @@ class Fiction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     subtitle = db.Column(db.String(150))
-    synopsis = db.Column(db.String(400), nullable=False)
+    synopsis = db.Column(db.String(1000), nullable=False)
     cover_img = db.Column(db.String(500))
     banner_img = db.Column(db.String(500))
     genres = db.relationship('Genre', secondary=genres, lazy='subquery', 
@@ -87,6 +126,27 @@ class Fiction(db.Model):
             ('complete', 'Complete'),
         )
 
+    def html(self):
+        output = ''
+        if self.synopsis:
+            output = process_markdown(self.synopsis)
+            output = remove_complicated_html(output)
+            output = remove_links(output)
+        return output
+
+    def text(self):
+        pattern = re.compile(r'<.*?>')
+        return pattern.sub('', self.html())
+
+    def snippet(self, length=150):
+        output = self.html()
+        if len(self.html()) > length:
+            output = self.html()[0:length] + '...'
+        else:
+            output = self.text() + '...'
+        output = remove_breaks(output)
+        return output
+        
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Float, nullable=False)

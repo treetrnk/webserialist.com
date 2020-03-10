@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if current_user.is_authenticated and fiction.author_id == current_user.id %}
+	<a href="{{ url_for('main.edit_fiction', obj_id=fiction.id) }}" class="btn btn-sm btn-secondary float-right">
+		<i class="fas fa-edit"></i>
+		Edit Fiction
+	</a>
+{% endif %}
+
+<div class="row">
+	<div class="col-md-3">
+		<img src="https://cor-cdn-static.bibliocommons.com/assets/default_covers/icon-book-93409e4decdf10c55296c91a97ac2653.png" class="img-responsive" width="100%"/>
+	</div>
+	<div class="col-md-9">
+		<h1>
+			{{ fiction.title }}
+		</h1>
+		{% if fiction.subtitle %}
+			<h4 class="text-muted">
+				{{ fiction.subtitle }}
+			</h4>
+		{% endif %}
+			<p>
+				<b>By:</b>
+				<a href="{{ url_for('auth.profile', username=fiction.author.username) }}">
+					{{ fiction.author.username }}
+				</a><br />
+			</p>
+
+		<hr />
+
+		<div class="row">
+
+			<div class="col-md-4 col">
+				<b>Status:</b> <span class="badge badge-primary">Ongoing</span>
+			</div>
+
+			<div class="col-md-4 col">
+				<b>Chapters/Month:</b> {{ fiction.frequency }}
+			</div>
+
+			<div class="col-md-4 col">
+				<b>Word Count:</b> {{ fiction.words }}
+			</div>
+
+		</div>
+		
+		<hr />
+		
+		{{ fiction.html()|safe }}
+
+		<h3 class="mt-5">Read It Here</h3>
+
+		<ul>
+			<li>
+				<a href="{{ fiction.website }}">
+					{{ fiction.website }}
+				</a>
+			</li>
+		</ul>
+
+
+
+	</div>
+</div>
+
+{% endblock %}

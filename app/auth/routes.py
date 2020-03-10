@@ -68,6 +68,8 @@ def profile(username=None):
     if username:
         user = User.query.filter_by(username=username).first()
     else: 
+        if not current_user.is_authenticated:
+            return '404 Error - Page not found', 404
         user = User.query.filter_by(id=current_user.id).first()
     return render_template('/auth/profile.html',
             user = user,

@@ -18,7 +18,7 @@ class FictionEditForm(FlaskForm):
     cover_img = FileField('Cover Image')
     title = StringField('Title', validators=[DataRequired(), Length(max=150)])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
-    synopsis = TextAreaField('Synopsis', validators=[DataRequired(), Length(max=400)],
+    synopsis = TextAreaField('Synopsis', validators=[DataRequired(), Length(max=1000)],
             render_kw={'rows': '6'})
     genres = QuerySelectMultipleField('Genres', render_kw={'data_type': 'select2'}, query_factory=all_genres)
     website = StringField('URL', validators=[DataRequired(), Length(max=300)])

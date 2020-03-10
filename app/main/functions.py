@@ -2,6 +2,7 @@ import re
 from math import floor
 from flask import current_app, flash
 from flask_login import current_user
+from markdown import markdown
 
 def round_half_up(n, decimals=0):
         multiplier = 10 ** decimals
@@ -98,3 +99,4 @@ def flash_form_errors(form_obj):
             msg += f"<li>{error}</li>"
     
         flash(msg, 'danger')
+

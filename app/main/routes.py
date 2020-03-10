@@ -11,6 +11,17 @@ from app.models import Fiction
 def index():
     return render_template('main/index.html')
 
+@bp.route('/fiction/<int:obj_id>')
+@bp.route('/fiction/<int:obj_id>/<string:slug>')
+def fiction(obj_id, slug=''):
+    #fiction = Fiction.query.filter_by(id=obj_id, approval=True).first()
+    fiction = Fiction.query.filter_by(id=obj_id).first()
+    current_app.logger.debug(f'Fiction: {fiction}')
+
+    return render_template('main/fiction.html',
+            fiction=fiction,
+        )
+
 @bp.route('/top')
 @bp.route('/top/<string:source>')
 @bp.route('/top/<string:source>/<string:sort>')

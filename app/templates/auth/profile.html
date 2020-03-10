@@ -7,9 +7,52 @@
 
 <h1>{{ user.display_name() }}'s Profile</h1>
 
-<h2>About</h2>
-<p>
-	{{ user.about_me }}
-</p>
+
+<div class="row">
+	<div class="col-md-2 col">
+
+	</div>
+	<div class="col">
+		<h2>About</h2>
+		{% if user.about_me %}
+			<p>
+				{{ user.html()|safe }}
+			</p>
+		{% else %}
+			<p>Nothing here yet...</p>
+		{% endif %}
+		<h4>Website</h4> 
+		{% if user.website %}
+			<a href="{{ user.website }}" target="_blank">{{ user.website }}</a>
+		{% endif %}
+	</div>
+</div>
+
+{% if user.fictions %}
+
+	<h2 class="mt-4">Fictions</h2>
+
+	<div class="row">
+		{% for fiction in user.fictions %}
+
+			<div class="col-md-4 col-sm-6 col">
+				<div class="card">
+					<div class="card-body">
+
+						<a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
+							<img src="{{ fiction.cover }}" class="float-left mr-3" width="100" height="150" />
+							<h3>{{ fiction.title }}</h3>
+						</a>
+						<h6 class="text-muted">{{ fiction.subtitle }}</h6>
+
+						<small>{{ fiction.snippet()|safe }}</small>
+
+					</div>
+				</div>
+			</div>
+
+		{% endfor %}
+
+{% endif %}
 
 {% endblock %}

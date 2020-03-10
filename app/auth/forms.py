@@ -43,6 +43,6 @@ class ProfileEditForm(FlaskForm):
     last_name = StringField('Last Name', validators=[Length(max=100)])
     avatar = FileField('Avatar', validators=[Length(max=500)])
     website = StringField('Website', validators=[Length(max=300)])
-    about_me = TextAreaField('About Me', validators=[Length(max=140)])
+    about_me = TextAreaField('About Me', validators=[Length(max=1000)])
     theme = SelectField('Theme', validators=[Length(max=75)])
     timezone = SelectField('Timezone', validators=[Length(max=150)])
