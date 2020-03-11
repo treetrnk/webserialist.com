@@ -43,7 +43,7 @@
 						By: {{ fiction.author.display_name() }}
 					</p>
 					<p>	
-							 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla pretium ullamcorper. Proin blandit, ipsum et tincidunt scelerisque, justo urna imperdiet enim, non scelerisque mi mi vitae ex. Integer interdum odio id est tincidunt dignissim. 
+            {{ fiction.snippet()|safe }}
 					</p>
 				</div>
 			</div>
