@@ -32,7 +32,7 @@ def process_signup():
         db.session.add(user)
         db.session.commit()
         flash('Welcome to Web Serialist.com!', 'success')
-        return redirect(url_for('.top_stories'))
+        return redirect(url_for('main.index'))
     return redirect(url_for('auth.login'))
 
 

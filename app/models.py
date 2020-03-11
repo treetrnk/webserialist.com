@@ -120,10 +120,11 @@ class Fiction(db.Model):
                         onupdate=datetime.utcnow, nullable=False)
 
     STATUS_CHOICES = (
-            #('unkown', 'Unknown'),
+            ('unkown', 'Unknown'),
             ('haiatus', 'Haiatus'),
             ('ongoing', 'Ongoing'),
             ('complete', 'Complete'),
+            ('abandoned', 'Abandoned'),
         )
 
     def html(self):

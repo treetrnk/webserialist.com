@@ -45,7 +45,12 @@ class AddFiction(SaveObjView):
 
     def extra(self):
         current_app.logger.debug(self.form.__dict__)
-        self.form.status.choices = [('ongoing', 'Ongoing'), ('hiatus','Hiatus')]
+        self.form.status.choices = Fiction.STATUS_CHOICES
+    
+    def post_post(self):
+        if self.form.author_claim.data == True:
+            self.obj.author_id = current_user.id
+        self.obj.updater_id = current_user.id
 
 bp.add_url_rule("/fiction/add", 
         view_func=AddFiction.as_view('add_fiction'))
@@ -62,7 +67,7 @@ class EditFiction(SaveObjView):
     redirect = {'endpoint': 'auth.profile'}
 
     def extra(self):
-        self.form.status.choices = [('ongoing', 'Ongoing'), ('hiatus','Hiatus')]
+        self.form.status.choices = Fiction.STATUS_CHOICES
 
 bp.add_url_rule("/fiction/edit/<int:obj_id>", 
         view_func=EditFiction.as_view('edit_fiction'))

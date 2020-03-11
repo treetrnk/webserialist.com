@@ -23,7 +23,7 @@ class FictionEditForm(FlaskForm):
     genres = QuerySelectMultipleField('Genres', render_kw={'data_type': 'select2'}, query_factory=all_genres)
     website = StringField('URL', validators=[DataRequired(), Length(max=300)])
     author_claim = BooleanField('Are you the Author?')
-    author_placeholder = StringField('Author', validators=[DataRequired()])
+    author_placeholder = StringField('Author')
     status = SelectField('Status')
     frequency = FloatField('Releases per Month')
 
