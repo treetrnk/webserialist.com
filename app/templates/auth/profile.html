@@ -23,7 +23,10 @@
 		{% endif %}
 		<h4>Website</h4> 
 		{% if user.website %}
-			<a href="{{ user.website }}" target="_blank">{{ user.website }}</a>
+			<a href="{{ user.website }}" target="_blank">
+        <i class="fas fa-external-link-alt"></i>
+        {{ user.website_domain() }}
+      </a>
 		{% endif %}
 	</div>
 </div>

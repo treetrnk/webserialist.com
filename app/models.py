@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from datetime import datetime
 from sqlalchemy import desc
+from urllib.parse import urlparse
 #from app.main.functions import process_markdown
 
 #tags = db.Table('tags',
@@ -82,6 +83,9 @@ class User(UserMixin, db.Model):
             output = remove_complicated_html(output)
         return output
 
+    def website_domain(self):
+        return urlparse(self.website).netloc
+
     def __str__(self):
         return self.username
 
@@ -135,6 +139,9 @@ class Fiction(db.Model):
             output = remove_links(output)
         return output
 
+    def website_domain(self):
+        return urlparse(self.website).netloc
+
     def text(self):
         pattern = re.compile(r'<.*?>')
         return pattern.sub('', self.html())
@@ -147,6 +154,9 @@ class Fiction(db.Model):
             output = self.text() + '...'
         output = remove_breaks(output)
         return output
+
+    def simple_frequency(self):
+        return str(self.frequency).rstrip('0').rstrip('.')
         
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
