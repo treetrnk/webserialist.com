@@ -51,9 +51,6 @@
 		<link href="https://fonts.googleapis.com/css?family=Anonymous+Pro|Cinzel|Comfortaa|Open+Sans|Questrial|Raleway|Righteous&display=swap" rel="stylesheet">
 
 		<style>
-			.navbar {
-				background-color: #fff;
-			}
 			.navbar .navbar-brand {
 				font-family: 'Anonymous Pro', monospace;
 				font-size: 175%;
@@ -68,9 +65,6 @@
 			.navbar .navbar-brand small {
 				font-size: 60%;
 			}
-			.navbar.fixed-top .nav-link {
-				color: #000;
-			}
 			body {
 				margin-top: 100px;
 				font-family: 'Open Sans', sans-serif;
@@ -78,6 +72,17 @@
 			.text-purple {
 				color: #5f00ad;
 			}
+
+      {% if current_user.is_authenticated and current_user.theme == 'dark' %}
+        body, html {
+          background-color: #222222;
+          color: #dddddd;
+        }
+        .navbar, .navbar.navbar-brand, .navbar a {
+          color: #ddd;
+        }
+      {% endif %}
+
 			/*
 			div.jumbotron {
 				{% if not page or page.template == 'page' or page.template == 'blog' %}
