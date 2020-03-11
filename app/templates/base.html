@@ -76,6 +76,10 @@
 				color: #5f00ad;
 			}
 
+			.logo-img {
+				max-height: 30px;
+			}
+
       {% if current_user.is_authenticated and current_user.theme == 'dark' %}
         body, html {
           background-color: #222222;
@@ -159,9 +163,14 @@
 
 		<nav class="navbar fixed-top navbar-expand-lg navbar-light" id='topNavbar'>
 			<a href="{{ url_for('main.index') }}" class='navbar-brand'>
-				<i class="fas fa-atlas float-left mr-4 text-purple" style='font-size:43px;margin-top:-7px;'></i>
-				Web Serialist<br />
-				<small class="text-muted mt-0">Guiding you to the internet's best stories</small>
+				<img class="logo-img" alt="Web Serialist.com"
+					{% if current_user.is_authenticated and current_user.theme == 'dark' %}
+						src="{{ url_for('static', filename='images/webserialist-light.png') }}"
+					{% else %}
+						src="{{ url_for('static', filename='images/webserialist-dark.png') }}"
+					{% endif %}
+						/><br />
+				<small class="text-muted mt-0 d-none d-sm-block">Guiding you to the web's best stories</small>
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
