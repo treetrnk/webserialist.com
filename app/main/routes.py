@@ -53,7 +53,7 @@ class AddFiction(SaveObjView):
         self.obj.updater_id = current_user.id
 
 bp.add_url_rule("/fiction/add", 
-        view_func=AddFiction.as_view('add_fiction'))
+        view_func=login_required(AddFiction.as_view('add_fiction')))
 
 class EditFiction(SaveObjView):
     title = "Edit Fiction"
@@ -70,7 +70,7 @@ class EditFiction(SaveObjView):
         self.form.status.choices = Fiction.STATUS_CHOICES
 
 bp.add_url_rule("/fiction/edit/<int:obj_id>", 
-        view_func=EditFiction.as_view('edit_fiction'))
+        view_func=login_required(EditFiction.as_view('edit_fiction')))
 
 class DeleteFiction(DeleteObjView):
     model = Fiction
@@ -79,5 +79,5 @@ class DeleteFiction(DeleteObjView):
     redirect = {'endpoint': 'main.profile'}
 
 bp.add_url_rule("/fiction/delete", 
-        view_func = DeleteFiction.as_view('delete_fiction'))
+        view_func = login_required(DeleteFiction.as_view('delete_fiction')))
 

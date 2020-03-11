@@ -92,7 +92,7 @@ class EditProfile(SaveObjView):
         self.form.timezone.choices = [('est','EST')]
 
 bp.add_url_rule("/profile/edit/<int:obj_id>", 
-        view_func=EditProfile.as_view('edit_profile'))
+        view_func=login_required(EditProfile.as_view('edit_profile')))
 
 class DeleteUser(DeleteObjView):
     model = User
@@ -101,4 +101,4 @@ class DeleteUser(DeleteObjView):
     redirect = {'endpoint': 'main.index'}
 
 bp.add_url_rule("/profile/delete", 
-        view_func = DeleteUser.as_view('delete_user'))
+        view_func = login_required(DeleteUser.as_view('delete_user')))
