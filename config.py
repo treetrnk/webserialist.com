@@ -4,6 +4,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 datadir = os.path.join(os.path.dirname(basedir), 'data/flask_wfg/')
 
 class Config(object):
+    env = os.environ.get('FLASK_ENV')
+    if env and env == 'development':
+        DEBUG = True
+        DEVELOPMENT = True
+        MAIL_SUPPRESS_SEND = True
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or \
         'sqlite:///' + os.path.join(datadir, 'app.db')
