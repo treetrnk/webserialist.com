@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for, request, abort
+from flask import render_template, redirect, flash, url_for, request, abort, current_app
 from app import db
 from app.auth import bp
 from flask_login import login_required, current_user, login_user, logout_user
@@ -9,6 +9,7 @@ from app.main.generic_views import SaveObjView, DeleteObjView
 # Add routes here
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup(tab='Sign Up'):
+    flash('Sign ups are currently closed.', 'warning')
     signup_form = SignupForm()
     login_form = LoginForm()
     return render_template('auth/login.html',
@@ -24,6 +25,7 @@ def login():
 
 @bp.route('/process-signup', methods=['POST'])
 def process_signup():
+    """
     form = SignupForm()
     if form.validate_on_submit():
         user = User()
@@ -34,6 +36,10 @@ def process_signup():
         flash('Welcome to Web Serialist.com!', 'success')
         return redirect(url_for('main.index'))
     return redirect(url_for('auth.login'))
+    """
+    current_app.logger.info(f"New Sign Up attempt: {request.form['first_name']} - {request.form['last_name']} - {request.form['email']}")
+    flash('We are not accepting new users at the moment. Thank you for your interest!', 'warning')
+    return redirect(url_for('main.index'))
 
 
 @bp.route('/process-login', methods=['POST'])
@@ -64,6 +70,7 @@ def logout():
 
 @bp.route("/profile")
 @bp.route("/profile/<string:username>")
+@login_required # DELETE WHEN READY
 def profile(username=None):
     if username:
         user = User.query.filter_by(username=username).first()

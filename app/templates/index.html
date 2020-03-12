@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<title>Web Serialist.com</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="description" content="Guiding you to the web's best stories" />
+
+			<!-- Schema.org markup for Google+ -->
+			<meta itemprop="name" content="Web Serialist.com">
+			<meta itemprop="description" content="Guiding you to the web's best stories">
+			<meta itemprop="image" content="favicon.png">
+
+			<!-- Twitter Card data -->
+			<meta name="twitter:card" content="summary_large_image">
+      <!--
+			<meta name="twitter:site" content="@webserialist">
+			<meta name="twitter:creator" content="@webserialist">
+      -->
+			<meta name="twitter:title" content="Web Serialist.com">
+			<meta name="twitter:description" content="Guiding you to the web's best stories">
+			<!-- Twitter summary card with large image must be at least 280x150px -->
+			<meta name="twitter:image:src" content="web-serialist-centered-dark.png">
+
+			<!-- Open Graph data -->
+			<meta property="og:title" content="Web Serialist.com" />
+			<meta property="og:type" content="article" />
+			<meta property="og:url" content="https://webserialist.com" />
+			<meta property="og:image" content="favicon.png" />
+			<meta property="og:description" content="Guiding you to the web's best stories" />
+			<meta property="og:site_name" content="Web Serialist.com" />
+      <!--
+			<meta property="article:published_time" content="" />
+			<meta property="article:modified_time" content="
+			<meta property="article:section" content="
+			<meta property="article:tag" content="
+			<meta property="fb:admins" content="Facebook numberic ID" />
+      -->
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon">
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link href="main.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Anonymous+Pro|Cinzel|Comfortaa|Open+Sans|Questrial|Raleway|Righteous&display=swap" rel="stylesheet">
+
+		<style>
+      .navbar {
+        background-color: #fff;
+      }
+			.navbar .navbar-brand {
+				font-family: 'Anonymous Pro', monospace;
+				font-size: 175%;
+				line-height: 20px;
+			}
+			.navbar .navbar-brand small {
+				font-family: 'Open Sans', sans-serif;
+			}
+			h1,h2,h3,h4,h5,h6 {
+				font-family: 'Raleway', sans-serif;
+			}
+			.navbar .navbar-brand small {
+				font-size: 60%;
+			}
+			body {
+				margin-top: 100px;
+				font-family: 'Open Sans', sans-serif;
+			}
+			.text-purple {
+				color: #5f00ad;
+			}
+		</style>
+
+	</head>
+	<body>
+
+
+    <!-- CONTENT -->
+
+    <div class="row justify-content-center h-100 m-4">
+      <div class="col-md-4 col-sm-8 col my-auto text-center">
+
+        <div class="text-center">
+          <img src="{{ url_for('static', filename='images/webserialist-centered-dark.png') }}" class="img-fluid mb-5" alt="Web Serialist.com">
+          <h3 class="text-muted mb-5">
+            Guiding you to the web's best stories
+          </h3>
+
+          <p class="text-left">
+            WebSerialist.com is planned to be a one-stop shop for people 
+            looking for good web fiction. It will host links to stories on the
+            web, allow users to rate and vote for stories, and it will be much
+            easier to use than the other options out there. For more details on
+            my plans for this site, see my 
+            <a href="https://houstonhare.com/blog/webserialist-com-rate-and-share-web-fiction" target="_blank">
+              blog post</a>.
+          </p>
+          <p class="text-left">
+            WebSerialist.com is currently being built. If you would like to
+            track the progress, check out the links below.
+          </p>
+          <p>
+            <a href="https://discord.gg/XGzAxY5" class="btn btn-lg btn-info mt-4 mb-4">
+              <i class="fab fa-discord"></i>
+              Discord Server
+            </a>
+            <a href="https://github.com/treetrnk/webserialist.com" class="btn btn-lg btn-secondary mt-4 mb-4">
+              <i class="fab fa-github"></i>
+              GitHub Repo
+            </a>
+          </p>
+
+            <h3>Coming soon!</h3>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <br />
+
+		<footer class="text-muted small">
+			<p class="text-center">&#169; Copyright 2020, WebSerialist.com </a>
+		</footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="{# url_for('static', filename='js/main.js') #}"></script>
+	</body>
+</html>

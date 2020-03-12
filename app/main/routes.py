@@ -9,6 +9,7 @@ from app.models import Fiction
 # Add routes here
 @bp.route('/fiction/<int:obj_id>')
 @bp.route('/fiction/<int:obj_id>/<string:slug>')
+@login_required # DELETE WHEN READY
 def fiction(obj_id, slug=''):
     #fiction = Fiction.query.filter_by(id=obj_id, approval=True).first()
     fiction = Fiction.query.filter_by(id=obj_id).first()
@@ -21,6 +22,7 @@ def fiction(obj_id, slug=''):
 @bp.route('/top')
 @bp.route('/top/<string:source>')
 @bp.route('/top/<string:source>/<string:sort>')
+@login_required # DELETE WHEN READY
 def top_stories(source=None, sort=None):
     fictions = Fiction.query.all()
     return render_template('main/top.html',
@@ -28,9 +30,15 @@ def top_stories(source=None, sort=None):
                 fictions = fictions,
         )
 
+@bp.route('/landing-page')
+def landing_page():
+    return render_template('index.html')
+
 @bp.route('/')
 def index():
-    return top_stories()
+    if current_user.is_authenticated:
+        return top_stories()
+    return landing_page()
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"
