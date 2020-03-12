@@ -7,10 +7,6 @@ from app.main.forms import FictionEditForm
 from app.models import Fiction
 
 # Add routes here
-@bp.route('/')
-def index():
-    return render_template('main/index.html')
-
 @bp.route('/fiction/<int:obj_id>')
 @bp.route('/fiction/<int:obj_id>/<string:slug>')
 def fiction(obj_id, slug=''):
@@ -31,6 +27,10 @@ def top_stories(source=None, sort=None):
                 title = 'Top Stories',
                 fictions = fictions,
         )
+
+@bp.route('/')
+def index():
+    return top_stories()
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"

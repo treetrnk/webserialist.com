@@ -79,18 +79,38 @@
 			.logo-img {
 				max-height: 30px;
 			}
-
+      .card {
+        background: rgba(125,125,125,0.13);
+      }
       {% if current_user.is_authenticated and current_user.theme == 'dark' %}
         body, html {
           background-color: #222222;
-          color: #dddddd;
+          color: #ccc;
         }
         .navbar, .navbar.navbar-brand, .navbar a {
-          color: #ddd;
+          color: #ccc;
         }
         .navbar {
           background-color: #222;
         }
+        input.form-control,textarea.form-control,select.form-control {
+          background-color: rgba(125,125,125,0.13);
+          color: #ddd;
+        }
+        .dropdown-menu {
+          background-color: rgba(125,125,125,0.2);
+        }
+        .dropdown-divider { 
+          border-top: 1px solid #000;
+        }
+        .list-group-item {
+          background: rgba(125,125,125,0.13);
+          color: #aaa;
+        }
+        .list-group-item:hover {
+          background: rgba(125,125,125,0.3);
+        }
+
       {% endif %}
 
 			/*
@@ -161,7 +181,7 @@
 		<progress value="0" data-toggle="tooltip" data-placement="bottom" title="Reading Progress"></progress>
 		-->
 
-		<nav class="navbar fixed-top navbar-expand-lg navbar-light" id='topNavbar'>
+    <nav class="navbar fixed-top navbar-expand-lg {% if current_user.is_authenticated and current_user.theme == 'dark' %}navbar-dark{% else %}navbar-light{% endif %}" id='topNavbar'>
 			<a href="{{ url_for('main.index') }}" class='navbar-brand'>
 				<img class="logo-img" alt="Web Serialist.com"
 					{% if current_user.is_authenticated and current_user.theme == 'dark' %}
@@ -178,16 +198,18 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a href="{# url_for('page.search') #}" class="nav-link" data-toggle='tooltip' title='Search'>
-							<i class="fas fa-search"></i>
-							<span class="d-inline d-sm-inline d-md-none">Search</span>
-						</a>
-					</li>
-					<li class="nav-item">
 						<a href="{{ url_for('main.top_stories') }}" class="nav-link">
 							<i class="fas fa-home"></i>
-							Home
+							Top Fictions
 						</a>
+          </li>
+					<li class="nav-item">
+						<a href="{# url_for('page.search') #}" class="nav-link" data-toggle='tooltip' title='Search'>
+							<i class="fas fa-search"></i>
+							Search
+						</a>
+					</li>
+          <!--
 					<li class="nav-item">
 						<a href="{{ url_for('main.index') }}" class="nav-link">
 							<i class="fas fa-book"></i>
@@ -200,6 +222,7 @@
 							Forum
 						</a>
 					</li>
+          -->
 					{% if current_user.is_authenticated %}
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
@@ -211,10 +234,12 @@
 									<i class="fas fa-user"></i>
 									Profile
 								</a>
+                <!--
 								<a class="dropdown-item" href="{# url_for('auth.add_fiction') #}">
 									<i class="fas fa-book"></i>
 									My Fictions
 								</a>
+                -->
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{ url_for('auth.logout') }}">
 									<i class="fas fa-lock-open"></i>
