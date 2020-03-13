@@ -27,5 +27,12 @@ class FictionEditForm(FlaskForm):
     status = SelectField('Status')
     frequency = FloatField('Releases per Month')
 
+class SubscribeForm(FlaskForm):
+    email = StringField('Email Address', validators=[Email(), DataRequired()])
+    email_confirm = StringField('Confirm Email', validators=[Email(), EqualTo('email'), DataRequired()])
+    first_name = StringField('First Name', validators=[Length(max=75)])
+    last_name = StringField('Last Name', validators=[Length(max=75)])
+    comment = TextAreaField('How did you hear about WS? What features are you most excited about? (Or other comments)', validators=[Length(max=75)])
+
 class DeleteObjForm(FlaskForm):
     obj_id = HiddenField('Object id', validators=[DataRequired()])

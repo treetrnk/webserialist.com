@@ -209,3 +209,10 @@ class Submission(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+class Subscriber(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True) 
+    first_name = db.Column(db.String(75), nullable=True)
+    last_name = db.Column(db.String(75), nullable=True)
+    comment = db.Column(db.String(1000))
+    sub_date = db.Column(db.DateTime(), default=datetime.utcnow)
