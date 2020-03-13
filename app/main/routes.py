@@ -3,8 +3,8 @@ from app import db
 from app.main import bp
 from flask_login import login_required, current_user
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.main.forms import FictionEditForm
-from app.models import Fiction
+from app.main.forms import FictionEditForm, SubscribeForm
+from app.models import Fiction, Subscriber
 
 # Add routes here
 @bp.route('/fiction/<int:obj_id>')
@@ -88,4 +88,27 @@ class DeleteFiction(DeleteObjView):
 
 bp.add_url_rule("/fiction/delete", 
         view_func = login_required(DeleteFiction.as_view('delete_fiction')))
+
+class AddSubscriber(SaveObjView):
+    title = "Add Subscriber"
+    model = Subscriber
+    form = SubscribeForm
+    action = 'Add'
+    log_msg = 'added a subscriber'
+    success_msg = 'Subscriber added.'
+    delete_endpoint = 'main.delete_subscriber'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'main.index'}
+
+bp.add_url_rule("/subscrib", 
+        view_func=AddSubscriber.as_view('subscribe'))
+
+class DeleteSubscriber(DeleteObjView):
+    model = Subscriber
+    log_msg = 'deleted a subscriber'
+    success_msg = 'Subscriber deleted.'
+    redirect = {'endpoint': 'main.index'}
+
+bp.add_url_rule("/unsubscribe", 
+        view_func = login_required(DeleteSubscriber.as_view('unsubscribe')))
 
