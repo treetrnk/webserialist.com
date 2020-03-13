@@ -9,7 +9,8 @@ from app.main.generic_views import SaveObjView, DeleteObjView
 # Add routes here
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup(tab='Sign Up'):
-    flash('Sign ups are currently closed.', 'warning')
+    if tab == 'Sign Up':
+        flash('Sign ups are currently closed.', 'danger')
     signup_form = SignupForm()
     login_form = LoginForm()
     return render_template('auth/login.html',
