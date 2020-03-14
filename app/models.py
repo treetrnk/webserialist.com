@@ -187,7 +187,8 @@ class View(db.Model):
     fiction = db.relationship('Fiction', backref='views', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='views', lazy=True)
-    ip = db.Column(db.String(15))
+    #ip = db.Column(db.String(15))
+    session_id = db.Column(db.String(200))
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
 
 class Genre(db.Model):

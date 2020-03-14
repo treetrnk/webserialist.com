@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for, current_app, request
+from flask import render_template, redirect, flash, url_for, current_app, request, session
 from app import db
 from app.main import bp
 from flask_login import login_required, current_user
@@ -15,14 +15,21 @@ def fiction(obj_id, slug=''):
     #fiction = Fiction.query.filter_by(id=obj_id, approval=True).first()
     fiction = Fiction.query.filter_by(id=obj_id).first()
    
-    view = View(
-       fiction_id = fiction.id,
-       ip = request.remote_addr
-    )
-    if current_user.is_authenticated:
-        view.user_id = current_user.id
-    db.session.add(view)
-    db.session.commit()
+    current_app.logger.debug(session)
+    current_app.logger.debug(session.get('_id'))
+
+    session_id = session.get('_id')
+    view = View.query.filter_by(session_id=session_id).first()
+
+    if not view:
+        view = View(
+           fiction_id = fiction.id,
+           session_id = session_id,
+        )
+        if current_user.is_authenticated:
+            view.user_id = current_user.id
+        db.session.add(view)
+        db.session.commit()
     current_app.logger.debug(f'Fiction: {fiction}')
 
 

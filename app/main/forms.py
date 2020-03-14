@@ -25,6 +25,7 @@ class FictionEditForm(FlaskForm):
     author_claim = BooleanField('Are you the Author?')
     author_placeholder = StringField('Author')
     status = SelectField('Status')
+    words = IntegerField('Current Word Count')
     frequency = FloatField('Releases per Month')
 
 class SubscribeForm(FlaskForm):
