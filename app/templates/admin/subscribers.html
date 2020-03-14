@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Subscribers</h1>
+
+<table class="table table-striped table-hover {% if current_user.theme == 'dark' %}table-dark{% endif %}">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for subscriber in subscribers %}
+      <tr>
+        <td>
+          {{ subscriber.first_name }}
+          {{ subscriber.last_name }}
+        </td>
+        <td>
+          <a href='mailto:{{ subscriber.email }}'>
+            {{ subscriber.email }}
+          </a>
+        </td>
+        <td>
+          {{ subscriber.comment }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
