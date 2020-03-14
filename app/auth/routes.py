@@ -26,20 +26,19 @@ def login():
 
 @bp.route('/process-signup', methods=['POST'])
 def process_signup():
-    """
-    form = SignupForm()
-    if form.validate_on_submit():
-        user = User()
-        form.populate_obj(user)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Welcome to Web Serialist.com!', 'success')
-        return redirect(url_for('main.index'))
-    return redirect(url_for('auth.login'))
-    """
     current_app.logger.info(f"New Sign Up attempt: {request.form['first_name']} - {request.form['last_name']} - {request.form['email']}")
-    flash('We are not accepting new users at the moment. Thank you for your interest!', 'warning')
+    if config['DEBUG']:
+        form = SignupForm()
+        if form.validate_on_submit():
+            user = User()
+            form.populate_obj(user)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Welcome to Web Serialist.com!', 'success')
+            return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
+    flash('We are not accepting new users at the moment. Thank you for your interest!', 'danger')
     return redirect(url_for('main.index'))
 
 
