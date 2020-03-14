@@ -146,6 +146,9 @@ class Fiction(db.Model):
         pattern = re.compile(r'<.*?>')
         return pattern.sub('', self.html())
 
+    def view_count(self):
+        return len(self.views)
+
     def snippet(self, length=150):
         output = self.html()
         if len(self.html()) > length:
