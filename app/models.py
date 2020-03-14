@@ -178,6 +178,15 @@ class Vote(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+class View(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
+    fiction = db.relationship('Fiction', backref='views', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='views', lazy=True)
+    ip = db.Column(db.String(15))
+    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
+
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(75), nullable=False)
