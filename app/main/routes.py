@@ -118,7 +118,8 @@ bp.add_url_rule("/fiction/delete",
         view_func = login_required(DeleteFiction.as_view('delete_fiction')))
 
 class AddSubscriber(SaveObjView):
-    title = "Add Subscriber"
+    decorators = []
+    title = "Subscribe"
     model = Subscriber
     form = SubscribeForm
     action = 'Add'
@@ -128,7 +129,7 @@ class AddSubscriber(SaveObjView):
     template = 'object-edit.html'
     redirect = {'endpoint': 'main.index'}
 
-bp.add_url_rule("/subscrib", 
+bp.add_url_rule("/subscribe", 
         view_func=AddSubscriber.as_view('subscribe'))
 
 class DeleteSubscriber(DeleteObjView):

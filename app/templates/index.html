@@ -103,50 +103,84 @@
 	</head>
 	<body>
 
+    <div class="container-fluid">
 
-    <!-- CONTENT -->
+      {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+              {% if category != "message" %}
+                <div class="alert alert-{{ category }}" role="alert">
+                  {% if category == 'success' %}
+                    <b><i class="fas fa-check-circle"></i> Success!</b>
+                  {% elif category == 'info' %}
+                    <b><i class="fas fa-info-circle"></i> Info!</b>
+                  {% elif category == 'warning' %}
+                    <b><i class="fas fa-exclamation-triangle"></i> Warning!</b>
+                  {% elif category == 'danger' %}
+                    <b><i class="fas fa-exclamation-circle"></i> Error!</b>
+                  {% endif %}
+                  {{ message|safe }}
+                </div>
+              {% else %}
+                <div class="alert alert-warning" role="alert">
+                  <b><i class="fas fa-exclamation-triangle"></i> Warning!</b>
+                  {{ message|safe }}
+                </div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
 
-    <div class="row justify-content-center h-100 m-4">
-      <div class="col-md-4 col-sm-8 col my-auto text-center">
+      <!-- CONTENT -->
 
-        <div class="text-center">
-          <img src="{{ url_for('static', filename='images/webserialist-centered-dark.png') }}" class="img-fluid mb-5" alt="Web Serialist.com">
-          <h3 class="text-muted mb-5">
-            Guiding you to the web's best stories
-          </h3>
+      <div class="row justify-content-center h-100 m-4">
+        <div class="col-md-4 col-sm-8 col my-auto text-center">
 
-          <p class="text-left">
-            WebSerialist.com is planned to be a one-stop shop for people 
-            looking for good web fiction. It will host links to stories on the
-            web, allow users to rate and vote for stories, and it will be much
-            easier to use than the other options out there. For more details on
-            my plans for this site, see my 
-            <a href="https://houstonhare.com/blog/webserialist-com-rate-and-share-web-fiction" target="_blank">
-              blog post</a>.
-          </p>
-          <p class="text-left">
-            WebSerialist.com is currently being built. If you would like to
-            track the progress, check out the links below.
-          </p>
-          <p>
-            <a href="https://discord.gg/XGzAxY5" class="btn btn-lg btn-info mt-4 mb-4">
-              <i class="fab fa-discord"></i>
-              Discord Server
-            </a>
-            <a href="https://github.com/treetrnk/webserialist.com" class="btn btn-lg btn-secondary mt-4 mb-4">
-              <i class="fab fa-github"></i>
-              GitHub Repo
-            </a>
-          </p>
+          <div class="text-center">
+            <img src="{{ url_for('static', filename='images/webserialist-centered-dark.png') }}" class="img-fluid mb-5" alt="Web Serialist.com">
+            <h3 class="text-muted mb-5">
+              Guiding you to the web's best stories
+            </h3>
 
-            <h3>Coming soon!</h3>
-          </p>
+            <p class="text-left">
+              WebSerialist.com is planned to be a one-stop shop for people 
+              looking for good web fiction. It will host links to stories on the
+              web, allow users to rate and vote for stories, and it will be much
+              easier to use than the other options out there. For more details on
+              my plans for this site, see my 
+              <a href="https://houstonhare.com/blog/webserialist-com-rate-and-share-web-fiction" target="_blank">
+                blog post</a>.
+            </p>
+            <p class="text-left">
+              WebSerialist.com is currently being built. If you would like to
+              track the progress, check out the links below.
+            </p>
+            <p>
+              <a href="{{ url_for('main.subscribe') }}" class="btn btn-lg btn-primary mt-4 mb-4">
+                <i class="fas fa-envelope"></i>
+                Subscribe
+              </a>
+              <br/>
+              <a href="https://discord.gg/XGzAxY5" class="btn btn-info mt-4 mb-4">
+                <i class="fab fa-discord"></i>
+                Discord Server
+              </a>
+              <a href="https://github.com/treetrnk/webserialist.com" class="btn btn-secondary mt-4 mb-4">
+                <i class="fab fa-github"></i>
+                GitHub Repo
+              </a>
+            </p>
+
+              <h3>Coming soon!</h3>
+            </p>
+          </div>
+
         </div>
-
       </div>
-    </div>
 
-    <br />
+      <br />
+
+    </div>
 
 		<footer class="text-muted small">
 			<p class="text-center">&#169; Copyright 2020, WebSerialist.com </a>

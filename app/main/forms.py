@@ -6,7 +6,7 @@ from wtforms import (
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, ValidationError
-from app.models import Genre
+from app.models import Genre, Subscriber
 
 required = "<span class='text-danger'>*</span>"
 
@@ -29,11 +29,17 @@ class FictionEditForm(FlaskForm):
     frequency = FloatField('Releases per Month')
 
 class SubscribeForm(FlaskForm):
-    email = StringField('Email Address', validators=[Email(), DataRequired()])
-    email_confirm = StringField('Confirm Email', validators=[Email(), EqualTo('email'), DataRequired()])
+    email = StringField(f'Email Address{required}', validators=[Email(), DataRequired()])
+    email_confirm = StringField(f'Confirm Email{required}', validators=[Email(), EqualTo('email'), DataRequired()])
     first_name = StringField('First Name', validators=[Length(max=75)])
     last_name = StringField('Last Name', validators=[Length(max=75)])
-    comment = TextAreaField('How did you hear about WS? What features are you most excited about? (Or other comments)', validators=[Length(max=75)])
+    comment = TextAreaField('Comments', render_kw={'placeholder': 'How did you hear about WS? What features are you most excited about?\nOther comments?'}, validators=[Length(max=75)])
+
+    def validate_email(self, email):
+        sub = Subscriber.query.filter_by(email=self.email.data).first()
+        if sub:
+            raise ValidationError('You are already subscribed!', 'Error')
+        return True
 
 class DeleteObjForm(FlaskForm):
     obj_id = HiddenField('Object id', validators=[DataRequired()])
