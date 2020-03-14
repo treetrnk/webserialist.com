@@ -146,8 +146,12 @@ class Fiction(db.Model):
         pattern = re.compile(r'<.*?>')
         return pattern.sub('', self.html())
 
-    def view_count(self):
-        return len(self.views)
+    def view_count(self, limit=None):
+        if limit == 'unique':
+            views = View.query.filter_by(fiction_id=self.id).with_entities(View.session_id).distinct().all()
+        else: 
+            views = self.views
+        return len(views)
 
     def snippet(self, length=150):
         output = self.html()

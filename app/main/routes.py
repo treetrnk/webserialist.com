@@ -19,17 +19,15 @@ def fiction(obj_id, slug=''):
     current_app.logger.debug(session.get('_id'))
 
     session_id = session.get('_id')
-    view = View.query.filter_by(session_id=session_id).first()
 
-    if not view:
-        view = View(
-           fiction_id = fiction.id,
-           session_id = session_id,
-        )
-        if current_user.is_authenticated:
-            view.user_id = current_user.id
-        db.session.add(view)
-        db.session.commit()
+    view = View(
+       fiction_id = fiction.id,
+       session_id = session_id,
+    )
+    if current_user.is_authenticated:
+        view.user_id = current_user.id
+    db.session.add(view)
+    db.session.commit()
     current_app.logger.debug(f'Fiction: {fiction}')
 
 
