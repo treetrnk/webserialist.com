@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from app.main.generic_views import SaveObjView, DeleteObjView
 from app.main.forms import FictionEditForm, SubscribeForm
 from app.models import Fiction, Subscriber
+from sqlalchemy import func
 
 # Add routes here
 @bp.route('/fiction/<int:obj_id>')
@@ -20,15 +21,25 @@ def fiction(obj_id, slug=''):
         )
 
 @bp.route('/top')
-@bp.route('/top/<string:source>')
-@bp.route('/top/<string:source>/<string:sort>')
 @login_required # DELETE WHEN READY
 def top_stories(source=None, sort=None):
-    fictions = Fiction.query.all()
+    if sort == 'random':
+        fictions = Fiction.query.order_by(func.random()).all()
+    else:
+        fictions = Fiction.query.all()
+        sort = 'trending'
+    title = 'Top Stories'
+    if sort:
+        title += ' - ' + sort
     return render_template('main/top.html',
                 title = 'Top Stories',
                 fictions = fictions,
+                sort = sort,
         )
+
+@bp.route('/top/random')
+def top_random():
+    return top_stories(sort='random')
 
 @bp.route('/landing-page')
 def landing_page():

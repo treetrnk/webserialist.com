@@ -27,7 +27,7 @@ def login():
 @bp.route('/process-signup', methods=['POST'])
 def process_signup():
     current_app.logger.info(f"New Sign Up attempt: {request.form['first_name']} - {request.form['last_name']} - {request.form['email']}")
-    if config['DEBUG']:
+    if current_app.config['DEBUG']:
         form = SignupForm()
         if form.validate_on_submit():
             user = User()

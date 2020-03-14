@@ -53,19 +53,22 @@
 	</div>
 	<div class="col-sm-3 col">
 		<div class="list-group">
-			<a href="" class="list-group-item list-group-item-action active">
+      <a href="{{ url_for('main.top_stories') }}" class="list-group-item list-group-item-action {% if sort == 'trending' %}active{% endif %}">
 				Trending
 			</a>
-			<a href="" class="list-group-item list-group-item-action">
+      <a href="{{ url_for('main.top_random') }}" class="list-group-item list-group-item-action {% if sort == 'random' %}active{% endif %}">
+				Random Order
+			</a>
+			<a href="" class="list-group-item list-group-item-action disabled">
 				Best Rated
 			</a>
-			<a href="" class="list-group-item list-group-item-action">
+			<a href="" class="list-group-item list-group-item-action disabled">
 				Popular This Week
 			</a>
-			<a href="" class="list-group-item list-group-item-action">
+			<a href="" class="list-group-item list-group-item-action disabled">
 				Most Weekly Votes
 			</a>
-			<a href="" class="list-group-item list-group-item-action">
+			<a href="" class="list-group-item list-group-item-action disabled">
 				Most Viewed
 			</a>
 		</div>
