@@ -106,6 +106,25 @@
         .list-group-item:hover {
           background: rgba(125,125,125,0.3);
         }
+        /*
+        */
+        .rate-star:hover {
+          color: #fe0;
+        }
+        .rate-star {
+          color: #999;
+          text-decoration: none;
+        }
+        #rate-bar > a.rate-star:before {
+          color: #999;
+          text-decoration: none;
+        }
+        #rate-bar:hover > a.rate-star:before {
+          color: #fe0;
+        }
+        #rate-bar:hover > a.rate-star:hover ~ .rate-star:before {
+          color: #999;
+        }
 
       {% endif %}
 

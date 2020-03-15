@@ -4,10 +4,33 @@ from app.main import bp
 from flask_login import login_required, current_user
 from app.main.generic_views import SaveObjView, DeleteObjView
 from app.main.forms import FictionEditForm, SubscribeForm
-from app.models import Fiction, Subscriber, View
+from app.models import Fiction, Subscriber, View, Rating
 from sqlalchemy import func
 
 # Add routes here
+@bp.route('/fiction/<int:obj_id>/rate/<int:stars>')
+@login_required
+def rate(obj_id, stars):
+    current_app.logger.debug(stars)
+    fiction = Fiction.query.filter_by(id=obj_id).first()
+    if not fiction or not stars:
+        flash('That fiction does not exist', 'danger')
+        return index()
+    rating = Rating.query.filter_by(user_id=current_user.id, fiction_id=obj_id).first()
+    if rating:
+        rating.stars = stars
+        flash('Your rating has been updated.', 'success')
+    else:
+        rating = Rating(
+                stars = stars,
+                user_id = current_user.id,
+                fiction_id = obj_id,
+            )
+        db.session.add(rating)
+        flash('Your rating has been added.', 'success')
+    db.session.commit()
+    return redirect(url_for('main.fiction', obj_id=fiction.id))
+
 @bp.route('/fiction/<int:obj_id>')
 @bp.route('/fiction/<int:obj_id>/<string:slug>')
 @login_required # DELETE WHEN READY
@@ -67,6 +90,7 @@ def index():
     if current_user.is_authenticated:
         return top_stories()
     return landing_page()
+
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"

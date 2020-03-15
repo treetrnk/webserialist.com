@@ -73,11 +73,9 @@
 			<div class="col-md-4 col">
 				<b>Rating:</b> 
         <span data-toggle="tooltip" title="No Ratings Yet">
-          <i class="fas fa-star text-muted"></i>
-          <i class="fas fa-star text-muted"></i>
-          <i class="fas fa-star text-muted"></i>
-          <i class="fas fa-star text-muted"></i>
-          <i class="fas fa-star text-muted"></i>
+          <span id="rate-bar">
+            {% for num in range(1, 6) %}<a href="{{ url_for('main.rate', obj_id=fiction.id, stars=num) }}" class="rate-star"><i class="fas fa-star"></i></a>{% endfor %}
+          </span>
         </span>
 			</div>
 
