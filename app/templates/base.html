@@ -79,7 +79,7 @@
         background: rgba(125,125,125,0.13);
       }
       a.rate-star {
-        color: #999;
+        color: #ccc;
         text-decoration: none;
         text-shadow: 0px 0px 2px #000;
       }
@@ -94,14 +94,14 @@
         display: inline;
       }
       #rate_bar > .rate-star:before {
-        color: #999;
+        color: #ccc;
         text-decoration: none;
       }
       #rate_bar:hover > a:before {
         color: #fe0;
       }
       #rate_bar:hover > a:hover ~ a:before {
-        color: #999;
+        color: #ccc;
       }
       {% if current_user.is_authenticated and current_user.theme == 'dark' %}
         body, html {
