@@ -78,6 +78,30 @@
       .card {
         background: rgba(125,125,125,0.13);
       }
+      a.rate-star {
+        color: #999;
+        text-decoration: none;
+      }
+      a.rate-star:hover {
+        color: #fe0;
+      }
+      .text-yellow {
+        color: #fe0 !important;
+      }
+      #rate_bar {
+        display: inline-block;
+        display: inline;
+      }
+      #rate_bar > .rate-star:before {
+        color: #999;
+        text-decoration: none;
+      }
+      #rate_bar:hover > a:before {
+        color: #fe0;
+      }
+      #rate_bar:hover > a:hover ~ a:before {
+        color: #999;
+      }
       {% if current_user.is_authenticated and current_user.theme == 'dark' %}
         body, html {
           background-color: #222222;
@@ -108,23 +132,6 @@
         }
         /*
         */
-        .rate-star:hover {
-          color: #fe0;
-        }
-        .rate-star {
-          color: #999;
-          text-decoration: none;
-        }
-        #rate-bar > a.rate-star:before {
-          color: #999;
-          text-decoration: none;
-        }
-        #rate-bar:hover > a.rate-star:before {
-          color: #fe0;
-        }
-        #rate-bar:hover > a.rate-star:hover ~ .rate-star:before {
-          color: #999;
-        }
 
       {% endif %}
 

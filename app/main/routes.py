@@ -53,11 +53,15 @@ def fiction(obj_id, slug=''):
     db.session.commit()
     current_app.logger.debug(f'Fiction: {fiction}')
 
+    rating = None
+    if current_user.is_authenticated:
+        rating = Rating.query.filter_by(user_id=current_user.id,fiction_id=fiction.id).first()
 
     current_app.logger.debug('VIEWS')
     current_app.logger.debug(fiction.view_count())
     return render_template('main/fiction.html',
             fiction=fiction,
+            rating=rating,
         )
 
 @bp.route('/top')

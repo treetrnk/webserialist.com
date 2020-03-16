@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from datetime import datetime
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from urllib.parse import urlparse
 #from app.main.functions import process_markdown
 
@@ -59,8 +59,6 @@ class User(UserMixin, db.Model):
     website = db.Column(db.String(300))
     theme = db.Column(db.String(75), default='light')
     timezone = db.Column(db.String(150))
-    ratings = db.relationship('Rating', backref='user', lazy=True)
-    votes = db.relationship('Vote', backref='user', lazy=True)
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
@@ -162,6 +160,16 @@ class Fiction(db.Model):
         output = remove_breaks(output)
         return output
 
+    def average_rating(self, return_type=None):
+        ratings = Rating.query.filter_by(fiction_id=self.id).with_entities(func.avg(Rating.stars).label('average')).all()
+        current_app.logger.debug(int(ratings[0][0]))
+        not_available = None
+        if return_type == 'text':
+            not_available == 'No ratings yet'
+        elif return_type == 'float':
+            not_available == 0
+        return ratings[0][0] if ratings else not_available
+
     def simple_frequency(self):
         return str(self.frequency).rstrip('0').rstrip('.')
         
@@ -171,7 +179,9 @@ class Rating(db.Model):
     subject = db.Column(db.String(150))
     comment = db.Column(db.String(5000))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='ratings', lazy=True)
     fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
+    fiction = db.relationship('Fiction', backref='ratings', lazy=True)
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
@@ -179,9 +189,11 @@ class Rating(db.Model):
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='votes', lazy=True)
     ip_address = db.Column(db.String(50), nullable=False)
     user_agent = db.Column(db.String(250))
     fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
+    fiction = db.relationship('Fiction', backref='votes', lazy=True)
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 

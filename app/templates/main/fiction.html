@@ -72,9 +72,9 @@
 
 			<div class="col-md-4 col">
 				<b>Rating:</b> 
-        <span data-toggle="tooltip" title="No Ratings Yet">
-          <span id="rate-bar">
-            {% for num in range(1, 6) %}<a href="{{ url_for('main.rate', obj_id=fiction.id, stars=num) }}" class="rate-star"><i class="fas fa-star"></i></a>{% endfor %}
+        <span data-toggle="tooltip" title="Average: {{ fiction.average_rating('text') }}{% if rating %} - Your Rating: {{ rating.stars }}{% endif %}">
+          <span id="rate_bar">
+            {% for num in range(1, 6) %}<a href="{{ url_for('main.rate', obj_id=fiction.id, stars=num) }}" class="rate-star {% if fiction.average_rating('float') >= num %}text-yellow{% endif %}"><i class="fas fa-star"></i></a>{% endfor %}
           </span>
         </span>
 			</div>
