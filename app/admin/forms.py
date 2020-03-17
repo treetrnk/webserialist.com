@@ -10,3 +10,16 @@ from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, V
 required = "<span class='text-danger'>*</span>"
 
 # Add forms here
+class UserEditForm(FlaskForm):
+    pass
+
+class GenreEditForm(FlaskForm):
+    pass
+
+class FictionEditForm(FlaskForm):
+    pass
+
+class SubscriberEditForm(FlaskForm):
+    pass
+
+
