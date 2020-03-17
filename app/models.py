@@ -13,6 +13,11 @@ from urllib.parse import urlparse
 #    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
 #    db.Column('page_id', db.Integer, db.ForeignKey('page.id'), primary_key=True)
 #)
+groups = db.Table('groups',
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
+
 
 def remove_html_tags(text):
     """Remove html tags from a string"""
@@ -47,6 +52,9 @@ genres = db.Table('genres',
     db.Column('fiction_id', db.Integer, db.ForeignKey('fiction.id'), primary_key=True)
 )
 
+##########
+## USER #######################################################################
+##########
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -54,6 +62,9 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    groups = db.relationship('Group', secondary=groups, lazy='subquery',
+            backref=db.backref('users', lazy=True))
+    active = db.Column(db.Boolean, default=True, nullable=False)
     avatar = db.Column(db.String(500))
     about_me = db.Column(db.String(1000))
     website = db.Column(db.String(300))
@@ -72,6 +83,16 @@ class User(UserMixin, db.Model):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
         return self.username
+
+    def in_group(self, group_names):
+        group_names = group_names.split(',')
+        my_group_names = [g.name for g in self.groups]
+        if 'webdev' in my_group_names:
+            return True
+        for group_name in group_names:
+            if group_name in my_group_names:
+                return True
+        return False
 
     def html(self):
         output = ''
@@ -95,6 +116,52 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+###########
+## GROUP #######################################################################
+###########
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(75), unique=True)
+    description = db.Column(db.String(300), nullable=True)
+    style = db.Column(db.String(75), default='info')
+    #restricted = db.Column(db.Boolean(), default=False)
+    updater_id = db.Column(db.Integer, db.ForeignKey('user.id'))#, onupdate=current_user.id, default=current_user.id)
+    updater = db.relationship('User', lazy=True)
+    updated = db.Column(db.DateTime, onupdate=datetime.utcnow, default=datetime.utcnow)
+
+    STYLE_CHOICES = [
+            ('info', 'Info (Gray-blue)'),
+            ('primary', 'Primary (Bright blue)'),
+            ('secondary', 'Secondary (Gray)'),
+            ('success', 'Success (Green)'),
+            ('warning', 'Warning (Orange)'),
+            ('danger', 'Danger (Red)'),
+            ('light', 'Light (White)'),
+            ('dark', 'Dark (Black)'),
+            ('RED', 'Red'),
+            ('ORG', 'Orange'),
+            ('YLW', 'Yellow'),
+            ('GRN', 'Green'),
+            ('BLU', 'Blue'),
+            ('PUR', 'Purple'),
+            ('PNK', 'Pink'),
+            ('GRY', 'Gray'),
+            ('WHT', 'White'),
+            ('BLK', 'Black'),
+        ]
+
+    def all_permissions(self):
+        return [p for p in self.permissions]
+
+    def __repr__(self):
+        return f'Group({self.id}, {self.name})'
+
+    def __str__(self):
+        return self.name
+
+#############
+## FICTION #######################################################################
+#############
 class Fiction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
@@ -174,6 +241,9 @@ class Fiction(db.Model):
     def simple_frequency(self):
         return str(self.frequency).rstrip('0').rstrip('.')
         
+############
+## RATING #######################################################################
+############
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Float, nullable=False)
@@ -187,6 +257,9 @@ class Rating(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+##########
+## VOTE #######################################################################
+##########
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -198,6 +271,9 @@ class Vote(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+##########
+## VIEW #######################################################################
+##########
 class View(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
@@ -208,6 +284,9 @@ class View(db.Model):
     session_id = db.Column(db.String(200))
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
 
+###########
+## GENRE #######################################################################
+###########
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(75), nullable=False)
@@ -218,6 +297,9 @@ class Genre(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+#########
+## TAG #######################################################################
+#########
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -225,6 +307,9 @@ class Tag(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+################
+## SUBMISSION #######################################################################
+################
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
@@ -239,6 +324,9 @@ class Submission(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+################
+## SUBSCRIBER #######################################################################
+################
 class Subscriber(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True) 
