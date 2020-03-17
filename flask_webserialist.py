@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User, Fiction, Rating, Vote, Tag, Genre
+from app.models import User, Fiction, Rating, Vote, Tag, Genre, Group, Subscriber
 
 app = create_app()
 
@@ -13,4 +13,6 @@ def make_shell_context():
             'Vote': Vote, 
             'Tag': Tag, 
             'Genre': Genre,
+            'Group': Group,
+            'Subscriber': Subscriber,
         }
