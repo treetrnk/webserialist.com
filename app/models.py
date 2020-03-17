@@ -162,13 +162,14 @@ class Fiction(db.Model):
 
     def average_rating(self, return_type=None):
         ratings = Rating.query.filter_by(fiction_id=self.id).with_entities(func.avg(Rating.stars).label('average')).all()
-        current_app.logger.debug(int(ratings[0][0]))
+        if ratings[0][0]:
+            current_app.logger.debug(int(ratings[0][0]))
         not_available = None
         if return_type == 'text':
-            not_available == 'No ratings yet'
+            not_available = 'No ratings yet'
         elif return_type == 'float':
-            not_available == 0
-        return ratings[0][0] if ratings else not_available
+            not_available = 0
+        return ratings[0][0] if ratings[0][0] else not_available
 
     def simple_frequency(self):
         return str(self.frequency).rstrip('0').rstrip('.')
