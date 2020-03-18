@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% include 'admin/nav.html' %}
+
+<a href="{{ url_for('admin.add_group') }}" class="btn btn-primary float-right">
+  <i class="fas fa-plus"></i>
+  Add Group
+</a>
+
+<h1>Groups</h1>
+
+<table class="table table-striped table-hover {% if current_user.theme == 'dark' %}table-dark{% endif %}">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Updated</th>
+      <th width="75">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for group in groups %}
+      <tr>
+        <td>
+          <span class="badge badge-{{ group.style }}">
+            {{ group.name }}
+          </span>
+        </td>
+        <td>
+          {{ group.description }}
+        </td>
+        <td>
+          {{ moment(group.updated).fromNow() }}
+        </td>
+        <td class="text-center">
+          <a href="{{ url_for('admin.edit_group', obj_id=group.id) }}" class="btn btn-sm btn-primary">
+            <i class="fas fa-edit"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

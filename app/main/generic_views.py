@@ -1,6 +1,6 @@
 from flask import render_template, redirect, current_app, url_for, flash, request
 from flask.views import View, MethodView
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.main.functions import log_new, log_change, log_form, flash_form_errors
 from app.main.forms import DeleteObjForm
 from app import db
@@ -115,11 +115,15 @@ class SaveObjView(MethodView):
                 log_orig = log_change(self.obj)
                 self.pre_post()
                 self.form.populate_obj(self.obj)
+                if hasattr(self.obj, 'updater_id'):
+                    self.obj.updater_id = current_user.id
                 self.post_post()
                 log_change(log_orig, self.obj, self.log_msg)
             else:
                 self.pre_post()
                 self.form.populate_obj(self.obj)
+                if hasattr(self.obj, 'updater_id'):
+                    self.obj.updater_id = current_user.id
                 self.post_post()
                 db.session.add(self.obj)
                 log_new(self.obj, self.log_msg)

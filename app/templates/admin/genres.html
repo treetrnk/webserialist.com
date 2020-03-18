@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% include 'admin/nav.html' %}
+
+<a href="{{ url_for('admin.add_genre') }}" class="btn btn-primary float-right">
+  <i class="fas fa-plus"></i>
+  Add Genre
+</a>
+
+<h1>Genres</h1>
+
+<table class="table table-striped table-hover {% if current_user.theme == 'dark' %}table-dark{% endif %}">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Icon</th>
+      <th>Updated</th>
+      <th width="75">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for genre in genres %}
+      <tr>
+        <td>
+          {{ genre.name }}
+        </td>
+        <td>
+          <i class="{{ genre.icon }}"></i>
+        </td>
+        <td>
+          {{ moment(genre.updated).fromNow() }}
+        </td>
+        <td class="text-center">
+          <a href="{{ url_for('admin.edit_genre', obj_id=genre.id) }}" class="btn btn-sm btn-primary">
+            <i class="fas fa-edit"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

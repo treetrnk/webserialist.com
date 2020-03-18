@@ -10,7 +10,7 @@ def group_required(groups, fail_redirect=None):
                 flash(f'You must login to access that page!', 'danger')
                 return redirect(url_for('auth.login'))
             if not current_user.active:
-                flash(f'Your account has been deactivated. Please speak with your supervisor to regain access.', 'danger')
+                flash(f'Your account has been deactivated. If there is a problem, please contact support@webserialist.com', 'danger')
                 current_app.logger.warning(f"Authentication Failure: {current_user.username}'s account is inactive.")
                 return redirect(url_for('auth.logout'))
             if not current_user.in_group(groups):

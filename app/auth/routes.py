@@ -33,6 +33,7 @@ def process_signup():
             user = User()
             form.populate_obj(user)
             user.set_password(form.password.data)
+            user.active = True
             db.session.add(user)
             db.session.commit()
             flash('Welcome to Web Serialist.com!', 'success')
