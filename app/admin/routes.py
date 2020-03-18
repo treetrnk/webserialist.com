@@ -18,6 +18,7 @@ def users():
         users = User.query.all()
         return render_template('admin/users.html',
                 users=users,
+                tab='users',
             )
     return redirect(url_for('main.index')), 404
 
@@ -31,6 +32,7 @@ class AddUser(SaveObjView):
     delete_endpoint = 'admin.delete_user'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.users'}
+    context = {'tab': 'users'}
 
 bp.add_url_rule("/admin/user/add", 
         view_func=group_required('admin')(AddUser.as_view('add_user')))
@@ -45,6 +47,7 @@ class EditUser(SaveObjView):
     delete_endpoint = 'admin.delete_user'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.users'}
+    context = {'tab': 'users'}
 
 bp.add_url_rule("/admin/user/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditUser.as_view('edit_user')))
@@ -64,6 +67,7 @@ def groups():
     groups = Group.query.all()
     return render_template('admin/groups.html',
             groups=groups,
+            tab='groups',
         )
 
 class AddGroup(SaveObjView):
@@ -76,6 +80,7 @@ class AddGroup(SaveObjView):
     delete_endpoint = 'admin.delete_group'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.groups'}
+    context = {'tab': 'groups'}
 
 bp.add_url_rule("/admin/group/add", 
         view_func=group_required('admin')(AddGroup.as_view('add_group')))
@@ -90,6 +95,7 @@ class EditGroup(SaveObjView):
     delete_endpoint = 'admin.delete_group'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.groups'}
+    context = {'tab': 'groups'}
 
 bp.add_url_rule("/admin/group/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditGroup.as_view('edit_group')))
@@ -104,14 +110,13 @@ bp.add_url_rule("/admin/group/delete",
         view_func = group_required('admin')(DeleteGroup.as_view('delete_group')))
 
 @bp.route('/admin/subscribers')
-@login_required
+@group_required('admin')
 def subscribers():
-    if current_user.is_authenticated and current_user.username == 'hueyhare' and current_user.id == 1:
-        subscribers = User.query.all()
-        return render_template('admin/subscribers.html',
-                subscribers=subscribers,
-            )
-    return redirect(url_for('main.index')), 404
+    subscribers = User.query.all()
+    return render_template('admin/subscribers.html',
+            subscribers=subscribers,
+            tab='subscribers',
+        )
 
 class AddSubscriber(SaveObjView):
     title = "Add Subscriber"
@@ -123,6 +128,7 @@ class AddSubscriber(SaveObjView):
     delete_endpoint = 'admin.delete_subscriber'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.subscribers'}
+    context = {'tab': 'subscribers'}
 
 bp.add_url_rule("/admin/subscriber/add", 
         view_func=group_required('admin')(AddSubscriber.as_view('add_subscriber')))
@@ -137,6 +143,7 @@ class EditSubscriber(SaveObjView):
     delete_endpoint = 'admin.delete_subscriber'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.subscribers'}
+    context = {'tab': 'subscribers'}
 
 bp.add_url_rule("/admin/subscriber/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditSubscriber.as_view('edit_subscriber')))
@@ -156,6 +163,7 @@ def fictions():
     fictions = Fiction.query.all()
     return render_template('admin/fictions.html',
             fictions=fictions,
+            tab='fictions',
         )
 
 @bp.route('/admin/fiction/submissions')
@@ -176,6 +184,7 @@ class AddFiction(SaveObjView):
     delete_endpoint = 'admin.delete_fiction'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.fictions'}
+    context = {'tab': 'fictions'}
 
 bp.add_url_rule("/admin/fiction/add", 
         view_func=group_required('admin')(AddFiction.as_view('add_fiction')))
@@ -190,6 +199,7 @@ class EditFiction(SaveObjView):
     delete_endpoint = 'admin.delete_fiction'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.fictions'}
+    context = {'tab': 'fictions'}
 
 bp.add_url_rule("/admin/fiction/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))
@@ -209,6 +219,7 @@ def genres():
     genres = Genre.query.all()
     return render_template('admin/genres.html',
             genres=genres,
+            tab='genres',
         )
 
 class AddGenre(SaveObjView):
@@ -221,6 +232,7 @@ class AddGenre(SaveObjView):
     delete_endpoint = 'admin.delete_genre'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.genres'}
+    context = {'tab': 'fictions'}
 
     def extra(self):
         self.form.parent_id.choices = [(0,'')] + [(g.id,g) for g in Genre.query.all()]
@@ -242,6 +254,7 @@ class EditGenre(SaveObjView):
     delete_endpoint = 'admin.delete_genre'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.genres'}
+    context = {'tab': 'fictions'}
 
     def extra(self):
         self.form.parent_id.choices = [(0,'')] + [(g.id,g) for g in Genre.query.all()]
