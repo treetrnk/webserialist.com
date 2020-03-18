@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from datetime import datetime
 from sqlalchemy import desc, func
+from sqlalchemy.orm import backref
 from urllib.parse import urlparse
 #from app.main.functions import process_markdown
 
@@ -251,6 +252,28 @@ class Fiction(db.Model):
 
     def __str__(self):
         return self.title
+
+##########
+## LINK ############################################################
+##########
+class Link(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
+    fiction = db.relationship('Fiction', backref=backref('links', order_by='Link.default'))
+    url = db.Column(db.String(500), nullable=False)
+    default = db.Column(db.Boolean)
+
+    def set_default(self):
+        links = Link.query.filter_by(fiction_id=self.fiction_id).all()
+        for link in links:
+            link.default = False
+        self.default = True
+
+    def __str__(self):
+        return f"{self.text} ({self.url[0:20]}...)"
+
+    def __repr__(self):
+        return f"<Link({self.id}, {self.text}, {self.url[:20]}...)>"
 
 ############
 ## RATING #######################################################################
