@@ -73,6 +73,11 @@ class User(UserMixin, db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    THEME_CHOICES = [
+            ('light', 'Light'),
+            ('dark', 'Dark'),
+        ]
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -241,6 +246,12 @@ class Fiction(db.Model):
     def simple_frequency(self):
         return str(self.frequency).rstrip('0').rstrip('.')
         
+    def __repr__(self):
+        return f'Fiction({self.id}, {self.title})'
+
+    def __str__(self):
+        return self.title
+
 ############
 ## RATING #######################################################################
 ############
@@ -257,6 +268,12 @@ class Rating(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    def __repr__(self):
+        return f'Rating({self.id}, {self.stars})'
+
+    def __str__(self):
+        return self.subject
+
 ##########
 ## VOTE #######################################################################
 ##########
@@ -271,6 +288,12 @@ class Vote(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    def __repr__(self):
+        return f'Vote({self.id}, {user.id})'
+
+    def __str__(self):
+        return self.id
+
 ##########
 ## VIEW #######################################################################
 ##########
@@ -283,6 +306,12 @@ class View(db.Model):
     #ip = db.Column(db.String(15))
     session_id = db.Column(db.String(200))
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
+
+    def __repr__(self):
+        return f'View({self.id})'
+
+    def __str__(self):
+        return self.id
 
 ###########
 ## GENRE #######################################################################
@@ -297,6 +326,12 @@ class Genre(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    def __repr__(self):
+        return f'Genre({self.id}, {self.name})'
+
+    def __str__(self):
+        return self.name
+
 #########
 ## TAG #######################################################################
 #########
@@ -306,6 +341,12 @@ class Tag(db.Model):
     updater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
+
+    def __repr__(self):
+        return f'Tag({self.id}, {self.name})'
+
+    def __str__(self):
+        return self.name
 
 ################
 ## SUBMISSION #######################################################################
@@ -324,6 +365,12 @@ class Submission(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    def __repr__(self):
+        return f'Submission({self.id})'
+
+    def __str__(self):
+        return self.id
+
 ################
 ## SUBSCRIBER #######################################################################
 ################
@@ -334,3 +381,10 @@ class Subscriber(db.Model):
     last_name = db.Column(db.String(75), nullable=True)
     comment = db.Column(db.String(1000))
     sub_date = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'Subscriber({self.id}, {self.email})'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} <{self.email}>"
+

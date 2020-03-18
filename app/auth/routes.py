@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for, request, abort, current_app
+from flask import render_template, redirect, flash, url_for, request, abort, current_app, session
 from app import db
 from app.auth import bp
 from flask_login import login_required, current_user, login_user, logout_user
@@ -55,6 +55,7 @@ def process_login():
             flash('Invalid password!', 'danger')
             return redirect(url_for('auth.login'))
         login_user(user)
+        session['theme'] = user.theme
         flash('You are now logged in.', 'success')
         #next = request.args.get('next')
         #if not is_safe_url(next):

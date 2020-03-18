@@ -5,12 +5,14 @@ from flask_login import login_required, current_user
 from app.auth.authenticators import group_required
 from app.admin.forms import (
         FictionEditForm, SubscriberEditForm, UserEditForm,
-        GenreEditForm, GroupEditForm,
+        GenreEditForm, GroupEditForm, TagEditForm, SubmissionEditForm,
     )
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.models import Subscriber, User, Fiction, Genre, Group
+from app.models import Subscriber, User, Fiction, Genre, Group, Tag, Submission
 
-# Add routes here
+##########
+## USER ##
+##########
 @bp.route('/admin/users')
 @group_required('admin')
 def users():
@@ -34,7 +36,10 @@ class AddUser(SaveObjView):
     redirect = {'endpoint': 'admin.users'}
     context = {'tab': 'users'}
 
-bp.add_url_rule("/admin/user/add", 
+    def extra(self):
+        self.form.theme.choices = User.THEME_CHOICES
+    
+bp.add_url_rule("/admin/users/add", 
         view_func=group_required('admin')(AddUser.as_view('add_user')))
 
 class EditUser(SaveObjView):
@@ -49,7 +54,10 @@ class EditUser(SaveObjView):
     redirect = {'endpoint': 'admin.users'}
     context = {'tab': 'users'}
 
-bp.add_url_rule("/admin/user/edit/<int:obj_id>", 
+    def extra(self):
+        self.form.theme.choices = User.THEME_CHOICES
+    
+bp.add_url_rule("/admin/users/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditUser.as_view('edit_user')))
 
 class DeleteUser(DeleteObjView):
@@ -58,9 +66,12 @@ class DeleteUser(DeleteObjView):
     success_msg = 'User deleted.'
     redirect = {'endpoint': 'admin.users'}
 
-bp.add_url_rule("/admin/user/delete", 
+bp.add_url_rule("/admin/users/delete", 
         view_func = group_required('admin')(DeleteUser.as_view('delete_user')))
 
+###########
+## GROUP ##
+###########
 @bp.route('/admin/groups')
 @group_required('admin')
 def groups():
@@ -82,7 +93,10 @@ class AddGroup(SaveObjView):
     redirect = {'endpoint': 'admin.groups'}
     context = {'tab': 'groups'}
 
-bp.add_url_rule("/admin/group/add", 
+    def extra(self):
+        self.form.style.choices = Group.STYLE_CHOICES
+
+bp.add_url_rule("/admin/groups/add", 
         view_func=group_required('admin')(AddGroup.as_view('add_group')))
 
 class EditGroup(SaveObjView):
@@ -97,7 +111,10 @@ class EditGroup(SaveObjView):
     redirect = {'endpoint': 'admin.groups'}
     context = {'tab': 'groups'}
 
-bp.add_url_rule("/admin/group/edit/<int:obj_id>", 
+    def extra(self):
+        self.form.style.choices = Group.STYLE_CHOICES
+
+bp.add_url_rule("/admin/groups/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditGroup.as_view('edit_group')))
 
 class DeleteGroup(DeleteObjView):
@@ -106,9 +123,12 @@ class DeleteGroup(DeleteObjView):
     success_msg = 'Group deleted.'
     redirect = {'endpoint': 'admin.groups'}
 
-bp.add_url_rule("/admin/group/delete", 
+bp.add_url_rule("/admin/groups/delete", 
         view_func = group_required('admin')(DeleteGroup.as_view('delete_group')))
 
+################
+## SUBSCRIBER ##
+################
 @bp.route('/admin/subscribers')
 @group_required('admin')
 def subscribers():
@@ -130,7 +150,7 @@ class AddSubscriber(SaveObjView):
     redirect = {'endpoint': 'admin.subscribers'}
     context = {'tab': 'subscribers'}
 
-bp.add_url_rule("/admin/subscriber/add", 
+bp.add_url_rule("/admin/subscribers/add", 
         view_func=group_required('admin')(AddSubscriber.as_view('add_subscriber')))
 
 class EditSubscriber(SaveObjView):
@@ -145,7 +165,7 @@ class EditSubscriber(SaveObjView):
     redirect = {'endpoint': 'admin.subscribers'}
     context = {'tab': 'subscribers'}
 
-bp.add_url_rule("/admin/subscriber/edit/<int:obj_id>", 
+bp.add_url_rule("/admin/subscribers/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditSubscriber.as_view('edit_subscriber')))
 
 class DeleteSubscriber(DeleteObjView):
@@ -154,24 +174,19 @@ class DeleteSubscriber(DeleteObjView):
     success_msg = 'Subscriber deleted.'
     redirect = {'endpoint': 'admin.subscribers'}
 
-bp.add_url_rule("/admin/subscriber/delete", 
+bp.add_url_rule("/admin/subscribers/delete", 
         view_func = group_required('admin')(DeleteSubscriber.as_view('delete_subscriber')))
 
-@bp.route('/admin/fiction')
+#############
+## FICTION ##
+#############
+@bp.route('/admin/fictions')
 @group_required('admin')
 def fictions():
     fictions = Fiction.query.all()
     return render_template('admin/fictions.html',
             fictions=fictions,
             tab='fictions',
-        )
-
-@bp.route('/admin/fiction/submissions')
-@group_required('admin')
-def submissions():
-    fictions = Fiction.query.all()
-    return render_template('admin/fictions.html',
-            fictions=fictions,
         )
 
 class AddFiction(SaveObjView):
@@ -186,7 +201,7 @@ class AddFiction(SaveObjView):
     redirect = {'endpoint': 'admin.fictions'}
     context = {'tab': 'fictions'}
 
-bp.add_url_rule("/admin/fiction/add", 
+bp.add_url_rule("/admin/fictions/add", 
         view_func=group_required('admin')(AddFiction.as_view('add_fiction')))
 
 class EditFiction(SaveObjView):
@@ -201,7 +216,7 @@ class EditFiction(SaveObjView):
     redirect = {'endpoint': 'admin.fictions'}
     context = {'tab': 'fictions'}
 
-bp.add_url_rule("/admin/fiction/edit/<int:obj_id>", 
+bp.add_url_rule("/admin/fictions/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))
 
 class DeleteFiction(DeleteObjView):
@@ -210,10 +225,80 @@ class DeleteFiction(DeleteObjView):
     success_msg = 'Fiction deleted.'
     redirect = {'endpoint': 'admin.fictions'}
 
-bp.add_url_rule("/admin/fiction/delete", 
+bp.add_url_rule("/admin/fictions/delete", 
         view_func = group_required('admin')(DeleteFiction.as_view('delete_fiction')))
 
-@bp.route('/admin/gerne')
+################
+## SUBMISSION ##
+################
+@bp.route('/admin/submissions')
+@group_required('admin')
+def submissions(status='pending'):
+    if status == 'approved':
+        submissions = Submission.query.filter_by(response=True).all()
+    elif status == 'approved':
+        submissions = Submission.query.filter_by(response=False).all()
+    else:
+        submissions = Submission.query.filter_by(response=None).all()
+    return render_template('admin/submissions.html',
+            submissions=submissions,
+            tab='submissions',
+            status=status,
+        )
+
+@bp.route('/admin/submissions/approved')
+@group_required('admin')
+def submissions_approved():
+    return submissions(status='approved')
+
+@bp.route('/admin/submissions/rejected')
+@group_required('admin')
+def submissions_rejected():
+    return submissions(status='rejected')
+
+class AddSubmission(SaveObjView):
+    title = "Add Submission"
+    model = Submission
+    form = SubmissionEditForm
+    action = 'Add'
+    log_msg = 'added a submission'
+    success_msg = 'Submission added.'
+    delete_endpoint = 'admin.delete_submission'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'admin.submissions'}
+    context = {'tab': 'submissions'}
+
+bp.add_url_rule("/admin/submissions/add", 
+        view_func=group_required('admin')(AddSubmission.as_view('add_submission')))
+
+class EditSubmission(SaveObjView):
+    title = "Edit Submission"
+    model = Submission
+    form = SubmissionEditForm
+    action = 'Edit'
+    log_msg = 'updated a submission'
+    success_msg = 'Submission updated.'
+    delete_endpoint = 'admin.delete_submission'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'admin.submissions'}
+    context = {'tab': 'submissions'}
+
+bp.add_url_rule("/admin/submissions/edit/<int:obj_id>", 
+        view_func=group_required('admin')(EditSubmission.as_view('edit_submission')))
+
+class DeleteSubmission(DeleteObjView):
+    model = Submission
+    log_msg = 'deleted a submission'
+    success_msg = 'Submission deleted.'
+    redirect = {'endpoint': 'admin.submissions'}
+
+bp.add_url_rule("/admin/submissions/delete", 
+        view_func = group_required('admin')(DeleteSubmission.as_view('delete_submission')))
+
+###########
+## GENRE ##
+###########
+@bp.route('/admin/gernes')
 @group_required('admin')
 def genres():
     genres = Genre.query.all()
@@ -241,7 +326,7 @@ class AddGenre(SaveObjView):
         if self.form.parent_id.data == 0:
             self.form.parent_id.data = None
 
-bp.add_url_rule("/admin/genre/add", 
+bp.add_url_rule("/admin/genres/add", 
         view_func=group_required('admin')(AddGenre.as_view('add_genre')))
 
 class EditGenre(SaveObjView):
@@ -263,7 +348,7 @@ class EditGenre(SaveObjView):
         if self.form.parent_id.data == 0:
             self.form.parent_id.data = None
 
-bp.add_url_rule("/admin/genre/edit/<int:obj_id>", 
+bp.add_url_rule("/admin/genres/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditGenre.as_view('edit_genre')))
 
 class DeleteGenre(DeleteObjView):
@@ -272,6 +357,57 @@ class DeleteGenre(DeleteObjView):
     success_msg = 'Genre deleted.'
     redirect = {'endpoint': 'admin.genres'}
 
-bp.add_url_rule("/admin/genre/delete", 
+bp.add_url_rule("/admin/genres/delete", 
         view_func = group_required('admin')(DeleteGenre.as_view('delete_genre')))
+
+#########
+## TAG ##
+#########
+@bp.route('/admin/tags')
+@group_required('admin')
+def tags():
+    tags = Tag.query.all()
+    return render_template('admin/tags.html',
+            tags=tags,
+            tab='tags',
+        )
+
+class AddTag(SaveObjView):
+    title = "Add Tag"
+    model = Tag
+    form = TagEditForm
+    action = 'Add'
+    log_msg = 'added a tag'
+    success_msg = 'Tag added.'
+    delete_endpoint = 'admin.delete_tag'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'admin.tags'}
+    context = {'tab': 'fictions'}
+
+bp.add_url_rule("/admin/tags/add", 
+        view_func=group_required('admin')(AddTag.as_view('add_tag')))
+
+class EditTag(SaveObjView):
+    title = "Edit Tag"
+    model = Tag
+    form = TagEditForm
+    action = 'Edit'
+    log_msg = 'updated a tag'
+    success_msg = 'Tag updated.'
+    delete_endpoint = 'admin.delete_tag'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'admin.tags'}
+    context = {'tab': 'fictions'}
+
+bp.add_url_rule("/admin/tags/edit/<int:obj_id>", 
+        view_func=group_required('admin')(EditTag.as_view('edit_tag')))
+
+class DeleteTag(DeleteObjView):
+    model = Tag
+    log_msg = 'deleted a tag'
+    success_msg = 'Tag deleted.'
+    redirect = {'endpoint': 'admin.tags'}
+
+bp.add_url_rule("/admin/tag/delete", 
+        view_func = group_required('admin')(DeleteTag.as_view('delete_tag')))
 

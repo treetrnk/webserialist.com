@@ -1,17 +1,25 @@
 <h1 class="mb-4"><i class="fas fa-hat-wizard"></i> Admin Panel</h1>
 <ul class="nav nav-pills mb-4">
 	<li class="nav-item">
-		<a class="nav-link dropdown-toggle {% if tab == 'fictions' %}active{% endif %}" data-toggle="dropdown" href="#">
-			<i class="fas fa-file-alt"></i><span class="d-none d-sm-none d-md-inline"> Fictions</span>
+		<a class="nav-link dropdown-toggle {% if tab == 'submissions' %}active{% endif %}" data-toggle="dropdown" href="#">
+			<i class="fas fa-inbox"></i><span class="d-none d-sm-none d-md-inline"> Submissions</span>
 		</a>
 		<div class="dropdown-menu">
-			<a href="{{ url_for('admin.fictions') }}?path={{ request.path }}" class="dropdown-item">
-				<i class="fas fa-file-alt"></i> Published
-			</a>
 			<a href="{{ url_for('admin.submissions') }}" class="dropdown-item">
-				<i class="fas fa-eye-slash"></i> Unpublished
+				<i class="fas fa-circle"></i> Pending
+			</a>
+			<a href="{{ url_for('admin.submissions_approved') }}" class="dropdown-item">
+				<i class="fas fa-check-circle"></i> Approved
+			</a>
+			<a href="{{ url_for('admin.submissions_rejected') }}" class="dropdown-item">
+				<i class="fas fa-times-circle"></i> Rejected
 			</a>
 		</div>
+	</li>
+	<li class="nav-item">
+		<a href="{{ url_for('admin.fictions') }}" class="nav-link {% if tab == 'fictions' %}active{% endif %}" data-toggle='tooltip' title='Users'>
+			<i class="fas fa-book"></i><span class="d-none d-sm-none d-md-inline"> Fictions</span>
+		</a>
 	</li>
 	<li class="nav-item">
 		<a href="{{ url_for('admin.users') }}" class="nav-link {% if tab == 'users' %}active{% endif %}" data-toggle='tooltip' title='Users'>
@@ -29,7 +37,7 @@
 		</a>
 	</li>
 	<li class="nav-item">
-		<a href="{# url_for('admin.tags') #}" class="nav-link {% if tab == 'tags' %}active{% endif %}" data-toggle='tooltip' title='Tags'>
+    <a href="{{ url_for('admin.tags') }}" class="nav-link {% if tab == 'tags' %}active{% endif %}" data-toggle='tooltip' title='Tags'>
 			<i class="fas fa-tags"></i><span class="d-none d-sm-none d-md-inline"> Tags</span>
 		</a>
 	</li>

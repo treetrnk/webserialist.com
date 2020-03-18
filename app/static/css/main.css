@@ -1,0 +1,98 @@
+.navbar {
+  background-color: #fff;
+}
+.navbar .navbar-brand {
+  font-family: 'Anonymous Pro', monospace;
+  font-size: 175%;
+  line-height: 20px;
+}
+.navbar .navbar-brand small {
+  font-family: 'Open Sans', sans-serif;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Raleway', sans-serif;
+}
+.navbar .navbar-brand small {
+  font-size: 60%;
+}
+body {
+  margin-top: 100px;
+  font-family: 'Open Sans', sans-serif;
+}
+.text-purple {
+  color: #5f00ad;
+}
+
+.logo-img {
+  max-height: 30px;
+}
+.card {
+  background: rgba(125,125,125,0.13);
+}
+a.rate-star {
+  color: #ccc;
+  text-decoration: none;
+  text-shadow: 0px 0px 2px #000;
+}
+a.rate-star:hover {
+  color: #fe0;
+}
+.text-yellow {
+  color: #fe0 !important;
+}
+#rate_bar {
+  display: inline-block;
+  display: inline;
+}
+#rate_bar > .rate-star:before {
+  color: #ccc;
+  text-decoration: none;
+}
+#rate_bar:hover > a:before {
+  color: #fe0;
+}
+#rate_bar:hover > a:hover ~ a:before {
+  color: #ccc;
+}
+.badge-GRN {
+	background-color: #00b20b;
+	color: #fff;
+}
+.badge-ORG {
+	background-color: #f90;
+	color: #000;
+}
+.badge-PNK {
+	background-color: #d100c3;
+	color: #fff;
+}
+.badge-PUR {
+	background-color: #8000d6;
+	color: #fff;
+}
+.badge-YLW {
+	background-color: #fff600;
+	color: #000;
+}
+.badge-RED {
+	background-color: #cc0000;
+	color: #fff;
+}
+.badge-BLU {
+	background-color: #0000cc;
+	color: #fff;
+}
+.badge-BLK {
+	background-color: #000;
+	color: #fff;
+}
+.badge-GRY {
+	background-color: #aaa;
+	color: #fff;
+}
+.badge-WHT {
+	background-color: #fff;
+	color: #000;
+	border: 1px solid #ddd;
+}
+

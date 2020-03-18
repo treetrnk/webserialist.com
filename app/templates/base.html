@@ -46,157 +46,9 @@
 		<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Anonymous+Pro|Cinzel|Comfortaa|Open+Sans|Questrial|Raleway|Righteous&display=swap" rel="stylesheet">
 
-		<style>
-      .navbar {
-        background-color: #fff;
-      }
-			.navbar .navbar-brand {
-				font-family: 'Anonymous Pro', monospace;
-				font-size: 175%;
-				line-height: 20px;
-			}
-			.navbar .navbar-brand small {
-				font-family: 'Open Sans', sans-serif;
-			}
-			h1,h2,h3,h4,h5,h6 {
-				font-family: 'Raleway', sans-serif;
-			}
-			.navbar .navbar-brand small {
-				font-size: 60%;
-			}
-			body {
-				margin-top: 100px;
-				font-family: 'Open Sans', sans-serif;
-			}
-			.text-purple {
-				color: #5f00ad;
-			}
-
-			.logo-img {
-				max-height: 30px;
-			}
-      .card {
-        background: rgba(125,125,125,0.13);
-      }
-      a.rate-star {
-        color: #ccc;
-        text-decoration: none;
-        text-shadow: 0px 0px 2px #000;
-      }
-      a.rate-star:hover {
-        color: #fe0;
-      }
-      .text-yellow {
-        color: #fe0 !important;
-      }
-      #rate_bar {
-        display: inline-block;
-        display: inline;
-      }
-      #rate_bar > .rate-star:before {
-        color: #ccc;
-        text-decoration: none;
-      }
-      #rate_bar:hover > a:before {
-        color: #fe0;
-      }
-      #rate_bar:hover > a:hover ~ a:before {
-        color: #ccc;
-      }
-      {% if current_user.is_authenticated and current_user.theme == 'dark' %}
-        body, html {
-          background-color: #222222;
-          color: #ccc;
-        }
-        .navbar, .navbar.navbar-brand, .navbar a {
-          color: #ccc;
-        }
-        .navbar {
-          background-color: #222;
-        }
-        input.form-control,textarea.form-control,select.form-control {
-          background-color: rgba(125,125,125,0.13);
-          color: #ddd;
-        }
-        .dropdown-menu {
-          background-color: rgba(125,125,125,0.2);
-        }
-        .dropdown-divider { 
-          border-top: 1px solid #000;
-        }
-        .list-group-item {
-          background: rgba(125,125,125,0.13);
-          color: #aaa;
-        }
-        .list-group-item:hover {
-          background: rgba(125,125,125,0.3);
-        }
-        /*
-        */
-
-      {% endif %}
-
-			/*
-			div.jumbotron {
-				{% if not page or page.template == 'page' or page.template == 'blog' %}
-					height: 280px;
-				{% else %}
-					height: 500px;
-				{% endif %}
-				{% if page and page.banner_path() %}
-					background-image: url({{ page.banner_path() }});
-				{% endif %}
-			}
-
-			{# if session['theme'] == 'dark' #}
-				body {
-					background-color: #1c1c1c;
-					color: #aaa;
-				}
-				.card {
-					background-color: #222;
-					color: #aaa;
-				}
-				.modal-content {
-					background-color: #222;
-					color: #aaa;
-				}
-				section.content-wrapper {
-					background-color: #222;
-					color: #aaa;
-				}
-				ol.breadcrumb {
-					background-color: #333;
-				}
-				.table td, .table th {
-					border-top: 1px solid #1c1c1c;
-				}
-				table.dataTable tbody tr {
-					background-color: #2a2a2a;
-				}
-				table.dataTable tbody tr:hover {
-					background-color: #333;
-				}
-				input, textarea, button, select, .form-control {
-					background-color: #333;
-					color: #aaa;
-				}
-				.form-control:focus {
-					background-color: #111;
-					color: #aaa;
-				}
-				.dataTables-wrapper label, .dataTables_info ,
-				.dataTables_wrapper .dataTables_length, 
-				.dataTables_wrapper .dataTables_filter, 
-				.dataTables_wrapper .dataTables_info, 
-				.dataTables_wrapper .dataTables_processing, 
-				.dataTables_wrapper .dataTables_paginate {
-					color: #aaa;
-				}
-			{# endif #}
-			*/
-		</style>
-
+    {% if current_user.is_authenticated and current_user.theme == 'dark' %}
+      <link href="{{ url_for('static', filename='css/dark.css') }}" rel="stylesheet">
+    {% endif %}
 	</head>
 	<body>
 
@@ -252,15 +104,15 @@
 								<i class="fas fa-user-cog"></i>
 								{{ current_user.username }}
 							</a>
-							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+              <div class="dropdown-menu dropdown-menu-right {% if session.get('theme') == 'dark' %}bg-dark{% endif %}" aria-labelledby="navbarDropdownMenuLink">
 								<a class="dropdown-item" href="{{ url_for('auth.profile') }}">
 									<i class="fas fa-user"></i>
 									Profile
 								</a>
-                {% if current_user.is_authenticated and current_user.username == 'hueyhare' and current_user.id == 1 %}
-                  <a class="dropdown-item" href="{{ url_for('admin.subscribers') }}">
-                    <i class="fas fa-envelope"></i>
-                    Subscribers
+                {% if current_user.is_authenticated and current_user.in_group('admin') %}
+                  <a class="dropdown-item" href="{{ url_for('admin.submissions') }}">
+                    <i class="fas fa-cogs"></i>
+                    Admin Panel
                   </a>
                 {% endif %}
                 <!--
@@ -355,7 +207,7 @@
     </section>
 
 		<footer class="text-muted small">
-			<p class="text-center">&#169; Copyright 2019, WebSerialist.com </a>
+			<p class="text-center">&#169; Copyright 2020, WebSerialist.com </a>
 		</footer>
 
     <!-- jQuery -->
@@ -376,6 +228,6 @@
 			{% endif %}
 
 		</script>
-		<script src="{# url_for('static', filename='js/main.js') #}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 	</body>
 </html>

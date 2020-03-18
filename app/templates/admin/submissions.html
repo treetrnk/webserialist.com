@@ -3,14 +3,14 @@
 
 {% include 'admin/nav.html' %}
 
-<a href="{{ url_for('admin.add_group') }}" class="btn btn-primary float-right">
-  <i class="fas fa-plus"></i>
-  Add Group
-</a>
+<h1>
+  Submissions
+  <small class="text-muted">
+    {{ status.title() }}
+  </small>
+</h1>
 
-<h1>Groups</h1>
-
-<table class="table table-striped table-hover {% if current_user.theme == 'dark' %}table-dark{% endif %}">
+<table class="table table-striped table-hover datatable">
   <thead>
     <tr>
       <th>Name</th>
@@ -20,21 +20,21 @@
     </tr>
   </thead>
   <tbody>
-    {% for group in groups %}
+    {% for submission in submissions %}
       <tr>
         <td>
-          <span class="badge badge-{{ group.style }}">
-            {{ group.name }}
+          <span class="badge badge-{{ submission.style }}">
+            {{ submission.name }}
           </span>
         </td>
         <td>
-          {{ group.description }}
+          {{ submission.description }}
         </td>
         <td>
-          {{ moment(group.updated).fromNow() }}
+          {{ moment(submission.updated).fromNow() }}
         </td>
         <td class="text-center">
-          <a href="{{ url_for('admin.edit_group', obj_id=group.id) }}" class="btn btn-sm btn-primary">
+          <a href="{{ url_for('admin.edit_submission', obj_id=submission.id) }}" class="btn btn-sm btn-primary">
             <i class="fas fa-edit"></i>
           </a>
         </td>
