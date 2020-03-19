@@ -23,7 +23,9 @@
     {% for fiction in fictions %}
       <tr>
         <td>
-          {{ fiction.title }}
+          <a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
+            {{ fiction.title }}
+          </a>
         </td>
         <td>
           {{ fiction.synopsis }}
