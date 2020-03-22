@@ -109,6 +109,17 @@
 									<i class="fas fa-user"></i>
 									Profile
 								</a>
+                {% if current_user.is_authenticated and current_user.submissions %}
+                  <a class="dropdown-item" href="{{ url_for('main.submissions') }}">
+                    <i class="fas fa-book-medical"></i>
+                    Submissions
+                  </a>
+                {% else %}
+                  <a class="dropdown-item" href="{{ url_for('main.add_submission') }}">
+                    <i class="fas fa-book-medical"></i>
+                    Submit a Fiction
+                  </a>
+                {% endif %}
                 {% if current_user.is_authenticated and current_user.in_group('admin') %}
                   <a class="dropdown-item" href="{{ url_for('admin.submissions') }}">
                     <i class="fas fa-cogs"></i>

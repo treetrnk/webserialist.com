@@ -2,9 +2,10 @@ from flask import render_template, redirect, flash, url_for, current_app, reques
 from app import db
 from app.main import bp
 from flask_login import login_required, current_user
+from app.auth.authenticators import group_required
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.main.forms import FictionEditForm, SubscribeForm
-from app.models import Fiction, Subscriber, View, Rating
+from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm
+from app.models import Fiction, Subscriber, View, Rating, Submission
 from sqlalchemy import func
 
 # Add routes here
@@ -95,6 +96,54 @@ def index():
         return top_stories()
     return landing_page()
 
+class AddSubmission(SaveObjView):
+    title = "Add Submission"
+    model = Submission
+    form = SubmissionEditForm
+    action = 'Add'
+    log_msg = 'added a submission'
+    success_msg = 'Submission added.'
+    delete_endpoint = 'main.delete_submission'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        current_app.logger.debug(self.form.__dict__)
+        self.form.status.choices = Fiction.STATUS_CHOICES
+    
+    def post_post(self):
+        if self.form.author_claim.data == True:
+            self.obj.author_id = current_user.id
+        self.obj.updater_id = current_user.id
+
+bp.add_url_rule("/submission/add", 
+        view_func=login_required(AddSubmission.as_view('add_submission')))
+
+class EditSubmission(SaveObjView):
+    title = "Edit Submission"
+    model = Submission
+    form = SubmissionEditForm
+    action = 'Edit'
+    log_msg = 'updated a submission'
+    success_msg = 'Submission updated.'
+    delete_endpoint = 'main.delete_submission'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        self.form.status.choices = Fiction.STATUS_CHOICES
+
+bp.add_url_rule("/submission/edit/<int:obj_id>", 
+        view_func=login_required(EditSubmission.as_view('edit_submission')))
+
+class DeleteSubmission(DeleteObjView):
+    model = Submission
+    log_msg = 'deleted a submission'
+    success_msg = 'Submission deleted.'
+    redirect = {'endpoint': 'main.profile'}
+
+bp.add_url_rule("/submission/delete", 
+        view_func = login_required(DeleteSubmission.as_view('delete_submission')))
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"
@@ -117,7 +166,7 @@ class AddFiction(SaveObjView):
         self.obj.updater_id = current_user.id
 
 bp.add_url_rule("/fiction/add", 
-        view_func=login_required(AddFiction.as_view('add_fiction')))
+        view_func=group_required('admin')(AddFiction.as_view('add_fiction')))
 
 class EditFiction(SaveObjView):
     title = "Edit Fiction"
@@ -134,7 +183,7 @@ class EditFiction(SaveObjView):
         self.form.status.choices = Fiction.STATUS_CHOICES
 
 bp.add_url_rule("/fiction/edit/<int:obj_id>", 
-        view_func=login_required(EditFiction.as_view('edit_fiction')))
+        view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))
 
 class DeleteFiction(DeleteObjView):
     model = Fiction
@@ -143,7 +192,7 @@ class DeleteFiction(DeleteObjView):
     redirect = {'endpoint': 'main.profile'}
 
 bp.add_url_rule("/fiction/delete", 
-        view_func = login_required(DeleteFiction.as_view('delete_fiction')))
+        view_func = group_required('admin')(DeleteFiction.as_view('delete_fiction')))
 
 class AddSubscriber(SaveObjView):
     decorators = []

@@ -10,10 +10,22 @@ from sqlalchemy.orm import backref
 from urllib.parse import urlparse
 #from app.main.functions import process_markdown
 
-#tags = db.Table('tags',
-#    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
-#    db.Column('page_id', db.Integer, db.ForeignKey('page.id'), primary_key=True)
-#)
+fiction_genres = db.Table('fiction_genres',
+    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'), primary_key=True),
+    db.Column('fiction_id', db.Integer, db.ForeignKey('fiction.id'), primary_key=True)
+)
+submission_genres = db.Table('proposal_genres',
+    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'), primary_key=True),
+    db.Column('submission_id', db.Integer, db.ForeignKey('submission.id'), primary_key=True)
+)
+fiction_tags = db.Table('fiction_tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('fiction_id', db.Integer, db.ForeignKey('fiction.id'), primary_key=True)
+)
+submission_tags = db.Table('proposal_tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('submission_id', db.Integer, db.ForeignKey('submission.id'), primary_key=True)
+)
 groups = db.Table('groups',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id'), primary_key=True),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
@@ -175,8 +187,11 @@ class Fiction(db.Model):
     synopsis = db.Column(db.String(1000), nullable=False)
     cover_img = db.Column(db.String(500))
     banner_img = db.Column(db.String(500))
-    genres = db.relationship('Genre', secondary=genres, lazy='subquery', 
+    genres = db.relationship('Genre', secondary=fiction_genres, lazy='subquery', 
             backref=db.backref('fictions', lazy=True))
+    tags = db.relationship('Tag', secondary=fiction_tags, lazy='subquery', 
+            backref=db.backref('fictions', lazy=True))
+    rating = db.Column(db.String(20), nullable=False)
     words = db.Column(db.Integer, default=0)
     website = db.Column(db.String(300), nullable=False)
     author_placeholder = db.Column(db.String(100)) # For unclaimed fictions
@@ -195,11 +210,19 @@ class Fiction(db.Model):
                         onupdate=datetime.utcnow, nullable=False)
 
     STATUS_CHOICES = (
-            ('unkown', 'Unknown'),
-            ('haiatus', 'Haiatus'),
+            #('unkown', 'Unknown'),
             ('ongoing', 'Ongoing'),
             ('complete', 'Complete'),
+            ('haiatus', 'Haiatus'),
             ('abandoned', 'Abandoned'),
+        )
+
+    RATING_CHOICES = (
+            ('G', 'G - Acceptable for all audiences'),
+            ('PG', 'PG - May contain some simple violence'),
+            ('PG-13', 'PG-13 - Acceptable for ages 13 and up'),
+            ('R', 'R - Contains graphic violence and/or sexual content'),
+            ('X', 'X - The focus is on sexual content'),
         )
 
     def html(self):
@@ -253,13 +276,57 @@ class Fiction(db.Model):
     def __str__(self):
         return self.title
 
+################
+## SUBMISSION #######################################################################
+################
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'))
+    fiction = db.relationship("Fiction", backref='submissions')
+    title = db.Column(db.String(150), nullable=False)
+    subtitle = db.Column(db.String(150))
+    synopsis = db.Column(db.String(1000), nullable=False)
+    cover_img = db.Column(db.String(500))
+    banner_img = db.Column(db.String(500))
+    genres = db.relationship('Genre', secondary=submission_genres, lazy='subquery', 
+            backref=db.backref('submissions', lazy=True))
+    tags = db.relationship('Tag', secondary=submission_tags, lazy='subquery', 
+            backref=db.backref('submissions', lazy=True))
+    rating = db.Column(db.String(20), nullable=False)
+    words = db.Column(db.Integer, default=0)
+    website = db.Column(db.String(300), nullable=False)
+    author_placeholder = db.Column(db.String(100)) 
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    author = db.relationship("User", foreign_keys=[author_id], backref='author_submissions')
+    status = db.Column(db.String(75), nullable=False)
+    frequency = db.Column(db.Float) # releases per month
+    approval = db.Column(db.Boolean, default=None)
+    approval_date = db.Column(db.DateTime, default=None) # True, False, None
+    approver_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Fix. 2 user ids
+    approver = db.relationship("User", foreign_keys=[approver_id],
+            backref='approved_submissions')
+    submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
+    submitter = db.relationship("User", foreign_keys=[submitter_id], backref='submissions')
+    updater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    updater = db.relationship("User", foreign_keys=[updater_id])
+    updated = db.Column(db.DateTime, default=datetime.utcnow, 
+                        onupdate=datetime.utcnow, nullable=False)
+
+    def __repr__(self):
+        return f'Submissions({self.id}, {self.title})'
+
+    def __str__(self):
+        return self.title
+
 ##########
 ## LINK ############################################################
 ##########
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'), nullable=False)
+    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'))
     fiction = db.relationship('Fiction', backref=backref('links', order_by='Link.default'))
+    submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
+    submission = db.relationship('Submission', backref=backref('links', order_by='Link.default'))
     url = db.Column(db.String(500), nullable=False)
     default = db.Column(db.Boolean)
 
@@ -371,28 +438,60 @@ class Tag(db.Model):
     def __str__(self):
         return self.name
 
-################
-## SUBMISSION #######################################################################
-################
-class Submission(db.Model):
+#############
+## COMMENT #####################################################################
+#############
+class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
-    submitter = db.relationship("User", foreign_keys=[submitter_id], backref='submissions')
-    fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id')) # For book covers
-    path = db.Column(db.String(500), nullable=False)
-    type = db.Column(db.String(50), nullable=False)
-    response = db.Column(db.Boolean)
-    comment = db.Column(db.String(1000))
-    updater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    updater = db.relationship("User", foreign_keys=[updater_id], backref='submission_responses')
-    updated = db.Column(db.DateTime, default=datetime.utcnow, 
-                        onupdate=datetime.utcnow, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref='comments', lazy=True)
+    submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
+    submission = db.relationship('Submission', backref=backref('comments', order_by='Comment.created.desc()'), lazy=True)
+    text = db.Column(db.String(5000), nullable=False, default=' ')
+    updated = db.Column(db.DateTime, onupdate=datetime.utcnow, default=datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    hidden = db.Column(db.Boolean, default=False)
+
+    def html_text(self):
+        return markdown(self.text)
+
+    def created_local(self):
+        utc_created = pytz.utc.localize(self.created)
+        return utc_created.astimezone(tz.tzlocal())
+
+    def notify(self, edited_user, subject="New Comment", url='/', item=''):
+        if edited_user.id == self.user.id:
+            recipients = [m.email for m in edited_user.get_managers()]        
+        else:
+            recipients = [edited_user.email]
+            for manager in edited_user.get_managers():
+                if self.user.id != manager.id:
+                    recipients += [manager.email]
+        recipients = [e for e in recipients if e]
+        if len(recipients) == 0:
+            print("Could not send email(s). No recipients!")
+            return False
+        base_url = current_app.config['BASE_URL']
+        subject = subject + f' by {self.user.display_name_short()}' if self.user else subject
+        text_body = f"EBS Portal Notification\n\nA new comment by {self.user.display_name_short()} was made on {item}.\n\nView it here: {base_url+url}"
+        send_email(
+                sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                subject=subject,
+                recipients=recipients,
+                text_body=text_body,
+                html_body=render_template('email/comment.html',
+                        url=base_url + url,
+                        user=self.user,
+                        comment=self,
+                        item=item,
+                        debug=current_app.config.get("DEBUG"),
+                    )
+            )
+        return recipients
 
     def __repr__(self):
-        return f'Submission({self.id})'
+            return f"Comment({self.id}, '{self.user}', '{self.submission_id}', '{self.text}')"
 
-    def __str__(self):
-        return self.id
 
 ################
 ## SUBSCRIBER #######################################################################

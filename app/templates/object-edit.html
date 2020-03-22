@@ -63,7 +63,7 @@
 									{% else %}
 										<button type="button" class="btn btn-block btn-sm btn-outline-success fieldlist-add">
 											<i class="fas fa-plus"></i> 
-											Add More {{ field.label.text }}
+											Add More {{ field.name.title() }}
 										</button>
 									{% endif %}
 								</div>
@@ -77,17 +77,25 @@
 								</div>
 							{% endif %}
 
-						{% else %}
+              {% else %} {# ========== NOT A FIELD LIST ========== #}
 
 							{% if field.errors %}
-								{{ field(class="form-control is-invalid") }}
+                {% if field.type == 'BooleanField' %}
+                  {{ field(class="is-invalid") }}
+                {% else %}
+                  {{ field(class="form-control is-invalid") }}
+                {% endif %}
 								<div class="invalid-feedback">
 									{% for error in field.errors %}
 										<span>{{ error }}</span>
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ field(class="form-control") }}
+                {% if field.type == 'BooleanField' %}
+                  {{ field() }}
+                {% else %}
+                  {{ field(class="form-control") }}
+                {% endif %}
 							{% endif %}
 							{{ field.form_text }}
 							{% if field.description %}
