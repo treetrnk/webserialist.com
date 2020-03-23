@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% include 'admin/nav.html' %}
+
+<h2>Submission<h2>
+
+<h3>
+	{{ submission.title }}
+	<br />
+	<small class="text-muted">
+		{{ submission.subtitle }}
+	</small>
+</h3>
+
+<p>
+	<b>By:</b> 
+	<a href="{{ url_for('auth.profile', username=submission.author.username) }}">
+		{{ submission.author.username }}
+	</a>
+</p>
+
+			<p>
+				<b>Genres:</b>
+				{% for genre in submission.genres %}
+					<a href="">
+            <i class="{{ genre.icon }}"></i>
+						{{ genre.name }}</a>
+				{% endfor %}
+			</p>
+
+		<hr />
+		
+		<p>
+			{{ submission.html()|safe }}
+		</p>
+
+		<ul>
+			{% for link in submission.links %}
+				<li>
+					<a href="{{ link.url }}" target="_blank">
+						{{ link.domain() }}
+						<i class="fas fa-link"></i>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+
+
+{% endblock %}

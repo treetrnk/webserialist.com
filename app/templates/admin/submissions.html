@@ -13,9 +13,10 @@
 <table class="table table-striped table-hover datatable">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Updated</th>
+      <th>Submitted</th>
+			<th>User</th>
+      <th>Title</th>
+      <th>Synopsis</th>
       <th width="75">Actions</th>
     </tr>
   </thead>
@@ -23,15 +24,18 @@
     {% for submission in submissions %}
       <tr>
         <td>
-          <span class="badge badge-{{ submission.style }}">
-            {{ submission.name }}
-          </span>
-        </td>
-        <td>
-          {{ submission.description }}
-        </td>
-        <td>
           {{ moment(submission.updated).fromNow() }}
+        </td>
+        <td>
+					<a href="{{ url_for('auth.profile', username=submission.author.username) }}">
+						{{ submission.author.username }}
+					</a>
+        </td>
+        <td>
+					{{ submission.title }}
+        </td>
+        <td>
+          {{ submission.snippet() }}
         </td>
         <td class="text-center">
           <a href="{{ url_for('admin.edit_submission', obj_id=submission.id) }}" class="btn btn-sm btn-primary">

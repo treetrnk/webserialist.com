@@ -271,20 +271,28 @@ class AddSubmission(SaveObjView):
 bp.add_url_rule("/admin/submissions/add", 
         view_func=group_required('admin')(AddSubmission.as_view('add_submission')))
 
-class EditSubmission(SaveObjView):
-    title = "Edit Submission"
-    model = Submission
-    form = SubmissionEditForm
-    action = 'Edit'
-    log_msg = 'updated a submission'
-    success_msg = 'Submission updated.'
-    delete_endpoint = 'admin.delete_submission'
-    template = 'object-edit.html'
-    redirect = {'endpoint': 'admin.submissions'}
-    context = {'tab': 'submissions'}
+#class EditSubmission(SaveObjView):
+#    title = "Edit Submission"
+#    model = Submission
+#    form = SubmissionEditForm
+#    action = 'Edit'
+#    log_msg = 'updated a submission'
+#    success_msg = 'Submission updated.'
+#    delete_endpoint = 'admin.delete_submission'
+#    template = 'object-edit.html'
+#    redirect = {'endpoint': 'admin.submissions'}
+#    context = {'tab': 'submissions'}
+#
+#bp.add_url_rule("/admin/submissions/edit/<int:obj_id>", 
+#        view_func=group_required('admin')(EditSubmission.as_view('edit_submission')))
 
-bp.add_url_rule("/admin/submissions/edit/<int:obj_id>", 
-        view_func=group_required('admin')(EditSubmission.as_view('edit_submission')))
+@bp.route('/admin/submissions/edit/<int:obj_id>')
+@group_required('admin')
+def edit_submission(obj_id):
+    submission = Submission.query.filter_by(id=obj_id).first()
+    return render_template('admin/edit-submission.html',
+            submission=submission,
+        )
 
 class DeleteSubmission(DeleteObjView):
     model = Submission

@@ -363,11 +363,14 @@ class Link(db.Model):
             link.default = False
         self.default = True
 
+    def domain(self):
+        return urlparse(self.url).netloc
+
     def __str__(self):
-        return f"{self.text} ({self.url[0:20]}...)"
+        return f"{self.url[0:20]}..."
 
     def __repr__(self):
-        return f"<Link({self.id}, {self.text}, {self.url[:20]}...)>"
+        return f"<Link({self.id}, {self.url[:20]}...)>"
 
 ############
 ## RATING #######################################################################
