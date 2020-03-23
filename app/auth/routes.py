@@ -2,7 +2,7 @@ from flask import render_template, redirect, flash, url_for, request, abort, cur
 from app import db
 from app.auth import bp
 from flask_login import login_required, current_user, login_user, logout_user
-from app.auth.forms import SignupForm, LoginForm, ProfileEditForm
+from app.auth.forms import SignupForm, LoginForm, ProfileEditForm, UserSettingsForm
 from app.models import User
 from app.main.generic_views import SaveObjView, DeleteObjView
 
@@ -85,6 +85,28 @@ def profile(username=None):
             title = f"{user.display_name()}'s Profile",
         )
 
+class UserSettings(SaveObjView):
+    title = "User Settings"
+    model = User
+    form = UserSettingsForm
+    action = 'Edit'
+    log_msg = 'updated their settings'
+    success_msg = 'User settings updated.'
+    delete_endpoint = 'auth.delete_user'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+    obj = current_user
+
+    def extra(self):
+        self.form.theme.choices = [('light','Light'), ('dark','Dark')]
+        #self.form.timezone.choices = [('est','EST')]
+
+    def post_post(self):
+        self.obj.set_password(self.form.new_password.data)
+
+bp.add_url_rule("/profile/settings", 
+        view_func=login_required(UserSettings.as_view('user_settings')))
+
 class EditProfile(SaveObjView):
     title = "User Settings"
     model = User
@@ -95,12 +117,9 @@ class EditProfile(SaveObjView):
     delete_endpoint = 'auth.delete_user'
     template = 'object-edit.html'
     redirect = {'endpoint': 'auth.profile'}
+    obj = current_user
 
-    def extra(self):
-        self.form.theme.choices = [('light','Light'), ('dark','Dark')]
-        self.form.timezone.choices = [('est','EST')]
-
-bp.add_url_rule("/profile/edit/<int:obj_id>", 
+bp.add_url_rule("/profile/edit", 
         view_func=login_required(EditProfile.as_view('edit_profile')))
 
 class DeleteUser(DeleteObjView):

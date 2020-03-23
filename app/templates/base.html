@@ -101,7 +101,7 @@
 					{% if current_user.is_authenticated %}
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-								<i class="fas fa-user-cog"></i>
+								<i class="fas fa-user"></i>
 								{{ current_user.username }}
 							</a>
               <div class="dropdown-menu dropdown-menu-right {% if session.get('theme') == 'dark' %}bg-dark{% endif %}" aria-labelledby="navbarDropdownMenuLink">
@@ -120,6 +120,10 @@
                     Submit a Fiction
                   </a>
                 {% endif %}
+								<a class="dropdown-item" href="{{ url_for('auth.user_settings') }}">
+									<i class="fas fa-user-cog"></i>
+									User Settings
+								</a>
                 {% if current_user.is_authenticated and current_user.in_group('admin') %}
                   <a class="dropdown-item" href="{{ url_for('admin.submissions') }}">
                     <i class="fas fa-cogs"></i>
