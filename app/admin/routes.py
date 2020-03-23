@@ -235,11 +235,11 @@ bp.add_url_rule("/admin/fictions/delete",
 @group_required('admin')
 def submissions(status='pending'):
     if status == 'approved':
-        submissions = Submission.query.filter_by(response=True).all()
+        submissions = Submission.query.filter_by(approval=True).all()
     elif status == 'approved':
-        submissions = Submission.query.filter_by(response=False).all()
+        submissions = Submission.query.filter_by(approval=False).all()
     else:
-        submissions = Submission.query.filter_by(response=None).all()
+        submissions = Submission.query.filter_by(approval=None).all()
     return render_template('admin/submissions.html',
             submissions=submissions,
             tab='submissions',
