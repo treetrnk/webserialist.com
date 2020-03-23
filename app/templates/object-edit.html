@@ -31,14 +31,22 @@
 													{{ f.label(class="col-form-label col-md-2 text-md-right") }}
 													<div class="col">
 														{% if f.errors %}
-															{{ f(class="form-control is-invalid") }}
+															{% if f.type == 'BooleanField' %}
+																{{ f(class="is-invalid") }}
+															{% else %}
+																{{ f(class="form-control is-invalid") }}
+															{% endif %}
 															<div class="invalid-feedback">
 																{% for error in f.errors %}
 																	<span>{{ error }}</span>
 																{% endfor %}
 															</div>
 														{% else %}
-															{{ f(class="form-control") }}
+															{% if f.type == 'BooleanField' %}
+																{{ f }}
+															{% else %}
+																{{ f(class="form-control") }}
+															{% endif %}
 														{% endif %}
 														{{ f.form_text }}
 														{% if f.description %}
@@ -119,7 +127,7 @@
 						<i class="fas fa-ban"></i>
 						Cancel
 					</a>
-					{% if action == 'Edit' and current_user.is_authenticated %}
+					{% if action == 'Edit' and current_user.is_authenticated and current_user.in_group('admin') %}
 						<button type='button' class="btn btn-danger delete-btn float-right" data-id="{{ obj.id }}">
 								<i class="fas fa-trash-alt"></i>
 								Delete
@@ -131,7 +139,7 @@
 		</form>
 	</div>
 </div>
-{% if action == 'Edit' and current_user.is_authenticated %}
+{% if action == 'Edit' and current_user.is_authenticated and current_user.in_group('admin') %}
 	<form action="{{ url_for(delete_endpoint) }}" id="delete{{ obj.id }}" method="post">
 		{{ delete_form.hidden_tag() }}
 	</form>
