@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from app.auth.authenticators import group_required
 from app.main.generic_views import SaveObjView, DeleteObjView
 from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm, FictionSearchForm
-from app.models import Fiction, Subscriber, View, Rating, Submission, Genre, Tag
+from app.models import Fiction, Subscriber, View, Rating, Submission, Genre, Tag, Link
 from sqlalchemy import func
 
 # Add routes here
@@ -172,6 +172,14 @@ def index():
         return top_stories()
     return landing_page()
 
+@bp.route('/submissions')
+@login_required
+def submissions():
+    submissions = Submission.query.filter_by(submitter_id=current_user.id).order_by(Submission.approval_date.desc()).all()
+    return render_template('main/submissions.html',
+            submissions=submissions,
+        )
+
 class AddSubmission(SaveObjView):
     title = "Add Submission"
     model = Submission
@@ -187,10 +195,15 @@ class AddSubmission(SaveObjView):
         current_app.logger.debug(self.form.__dict__)
         self.form.status.choices = Fiction.STATUS_CHOICES
     
+    def pre_post(self):
+        for entry in self.form.links.entries:
+            self.obj.links.append(Link())
+
     def post_post(self):
         if self.form.author_claim.data == True:
             self.obj.author_id = current_user.id
         self.obj.updater_id = current_user.id
+        self.obj.submitter_id = current_user.id
 
 bp.add_url_rule("/submission/add", 
         view_func=login_required(AddSubmission.as_view('add_submission')))
@@ -208,6 +221,10 @@ class EditSubmission(SaveObjView):
 
     def extra(self):
         self.form.status.choices = Fiction.STATUS_CHOICES
+
+    def pre_post(self):
+        for entry in self.form.links.entries:
+            self.obj.links.append(Link())
 
 bp.add_url_rule("/submission/edit/<int:obj_id>", 
         view_func=login_required(EditSubmission.as_view('edit_submission')))
@@ -236,6 +253,10 @@ class AddFiction(SaveObjView):
         current_app.logger.debug(self.form.__dict__)
         self.form.status.choices = Fiction.STATUS_CHOICES
     
+    def pre_post(self):
+        for entry in self.form.links.entries:
+            self.obj.links.append(Link())
+
     def post_post(self):
         if self.form.author_claim.data == True:
             self.obj.author_id = current_user.id

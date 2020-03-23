@@ -191,9 +191,9 @@ class Fiction(db.Model):
             backref=db.backref('fictions', lazy=True))
     tags = db.relationship('Tag', secondary=fiction_tags, lazy='subquery', 
             backref=db.backref('fictions', lazy=True))
-    rating = db.Column(db.String(20), nullable=False)
+    rating = db.Column(db.String(20))
     words = db.Column(db.Integer, default=0)
-    website = db.Column(db.String(300), nullable=False)
+    website = db.Column(db.String(300))
     author_placeholder = db.Column(db.String(100)) # For unclaimed fictions
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     author = db.relationship("User", foreign_keys=[author_id], backref='fictions')
@@ -302,9 +302,9 @@ class Submission(db.Model):
             backref=db.backref('submissions', lazy=True))
     tags = db.relationship('Tag', secondary=submission_tags, lazy='subquery', 
             backref=db.backref('submissions', lazy=True))
-    rating = db.Column(db.String(20), nullable=False)
+    rating = db.Column(db.String(20))
     words = db.Column(db.Integer, default=0)
-    website = db.Column(db.String(300), nullable=False)
+    website = db.Column(db.String(300))
     author_placeholder = db.Column(db.String(100)) 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     author = db.relationship("User", foreign_keys=[author_id], backref='author_submissions')
@@ -321,6 +321,23 @@ class Submission(db.Model):
     updater = db.relationship("User", foreign_keys=[updater_id])
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
+
+    def html(self):
+        output = ''
+        if self.synopsis:
+            output = process_markdown(self.synopsis)
+            output = remove_complicated_html(output)
+            output = remove_links(output)
+        return output
+
+    def snippet(self, length=150):
+        output = self.html()
+        if len(self.html()) > length:
+            output = self.html()[0:length] + '...'
+        else:
+            output = self.text() + '...'
+        output = remove_breaks(output)
+        return output
 
     def __repr__(self):
         return f'Submissions({self.id}, {self.title})'

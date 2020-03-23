@@ -18,7 +18,7 @@ def all_tags():
     return Tag.query.order_by('name').all()
 
 class LinkAddForm(FlaskForm):
-    id = HiddenField('id', render_kw={'class': 'child-id'})
+    #id = HiddenField('id', render_kw={'class': 'child-id'})
     url = StringField('URL', validators=[Length(max=500), URL()], render_kw={'placeholder': 'https://'})
     default = BooleanField('Default Link?')
 

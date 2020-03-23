@@ -111,6 +111,8 @@ class SaveObjView(MethodView):
         current_app.logger.info('POSTED========================================')
         if self.form.validate_on_submit():
             current_app.logger.info('VALIDATED========================================')
+            #for field in self.form:
+            #    current_app.logger.debug(f"{field.name}: {field.data}")
             if self.action == 'Edit':
                 log_orig = log_change(self.obj)
                 self.pre_post()
