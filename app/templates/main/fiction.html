@@ -45,9 +45,12 @@
 					{{ fiction.author.username }}
 				</a><br />
 
+				<b>Genres:</b>
 				{% for genre in fiction.genres %}
 					<i class="{{ genre.icon }}"></i>
-					{{ genre.name }}
+					<a href="">
+						{{ genre.name }}
+					</a>
 				{% endfor %}
 			</p>
 
