@@ -4,8 +4,8 @@ from app.main import bp
 from flask_login import login_required, current_user
 from app.auth.authenticators import group_required
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm
-from app.models import Fiction, Subscriber, View, Rating, Submission
+from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm, FictionSearchForm
+from app.models import Fiction, Subscriber, View, Rating, Submission, Genre, Tag
 from sqlalchemy import func
 
 # Add routes here
@@ -31,6 +31,16 @@ def rate(obj_id, stars):
         flash('Your rating has been added.', 'success')
     db.session.commit()
     return redirect(url_for('main.fiction', obj_id=fiction.id))
+
+@bp.route('/genre/<string:genre>')
+@login_required # DELETE WHEN READY
+def genre_fictions(genre):
+    genre = Genre.query.filter(func.lower(Genre.name) == func.lower(genre)).first()
+    if not genre:
+        return redirect(url_for('main.404'))
+    return render_template('main/genre_fiction.html',
+                genre=genre,
+            )
 
 @bp.route('/fiction/<int:obj_id>')
 @bp.route('/fiction/<int:obj_id>/<string:slug>')
@@ -85,6 +95,72 @@ def top_stories(source=None, sort=None):
 @bp.route('/top/random')
 def top_random():
     return top_stories(sort='random')
+
+@bp.route('/fiction/search')
+@login_required # DELETE WHEN READY
+def fiction_search():
+    form = FictionSearchForm()
+
+    sort = request.args.get('sort')
+    genres = request.args.get('genres') or ''
+    tags = request.args.get('tags') or ''
+    keywords = request.args.get('keywords') or ''
+    current_app.logger.debug(genres)
+    
+    form.sort.data = sort
+    form.genres.data = genres
+    form.tags.data = tags
+    form.keywords.data = keywords
+    
+    sort_order = sort.split(',') if sort else None
+    sort = sort_order[0] if sort else 'rating'
+    order = sort_order[1] if sort_order and len(sort_order) > 1 else 'desc'
+    genres = genres.split(',')
+    genres = [g for g in genres if g]
+    tags = tags.split(',')
+    tags = [t for t in tags if t]
+    #keywords = keywords.split(' ')
+    #keywords = [k for k in keywords if k]
+
+    fictions = Fiction.query
+    if genres:
+        current_app.logger.debug('GENRES')
+        current_app.logger.debug(genres)
+        fictions = fictions.filter(Fiction.genres.any(Genre.name.in_(genres)))
+    if tags:
+        current_app.logger.debug('TAGS')
+        current_app.logger.debug(tags)
+        fictions = fictions.filter(Fiction.tags.any(Tag.name.in_(tags)))
+    if keywords:
+        current_app.logger.debug('KEYWORDS')
+        current_app.logger.debug(keywords)
+        fictions = fictions.filter(Fiction.synopsis.ilike("%" + keywords + "%"))
+    if sort:
+        if sort == 'rating':
+            if order == 'asc':
+                fictions = fictions.order_by('rating', 'title', 'approval_date')
+            else:
+                fictions = fictions.order_by(Fiction.rating.desc(), 'title', 'approval_date')
+        elif sort == 'votes':
+            pass
+        elif sort == 'views':
+            if order == 'asc':
+                fictions = fictions.order_by('votes', 'title', 'approval_date')
+            else:
+                fictions = fictions.order_by(Fiction.votes.desc(), 'title', 'approval_date')
+        elif sort == 'random':
+            fictions = fictions.order_by(func.random())
+
+    form.genres.choices = [(g.name, g.name) for g in Genre.query.all()]
+    form.tags.choices = [(t.name, t.name) for t in Tag.query.all()]
+    form.sort.choices = Fiction.SEARCH_SORT_CHOICES
+
+    return render_template('main/fiction_search.html',
+                fictions=fictions.all(),
+                form=form,
+            )
+
+
 
 @bp.route('/landing-page')
 def landing_page():

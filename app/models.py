@@ -225,6 +225,16 @@ class Fiction(db.Model):
             ('X', 'X - The focus is on sexual content'),
         )
 
+    SEARCH_SORT_CHOICES = [
+            ('rating,desc', 'Rating (High ⭢ Low)'),
+            ('rating,asc', 'Rating (Low ⭢ High)'),
+            #('views,desc', 'Views (High ⭢ Low)'),
+            #('views,asc', 'Views (Low ⭢ High)'),
+            ('votes,desc', 'Votes (High ⭢ Low)'),
+            ('votes,asc', 'Votes (Low ⭢ High)'),
+            ('random', 'Random Order'),
+        ]
+
     def html(self):
         output = ''
         if self.synopsis:

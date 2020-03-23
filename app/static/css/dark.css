@@ -77,4 +77,6 @@ input, textarea, button, select, .form-control {
   background: rgba(125,125,125,0.5);
   color: #aaa;
 }
-
+.select2-container--default .select2-selection--multiple {
+  background-color: #333;
+}

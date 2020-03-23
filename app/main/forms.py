@@ -7,12 +7,15 @@ from wtforms import (
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, ValidationError, URL
-from app.models import Genre, Subscriber
+from app.models import Genre, Subscriber, Tag
 
 required = "<span class='text-danger'>*</span>"
 
 def all_genres(): 
     return Genre.query.order_by('name').all()
+
+def all_tags(): 
+    return Tag.query.order_by('name').all()
 
 class LinkAddForm(FlaskForm):
     id = HiddenField('id', render_kw={'class': 'child-id'})
@@ -67,6 +70,12 @@ class SubscribeForm(FlaskForm):
         if sub:
             raise ValidationError('You are already subscribed!', 'Error')
         return True
+
+class FictionSearchForm(FlaskForm):
+    keywords = StringField('Search', validators=[Length(max=200)])
+    genres = SelectMultipleField('Genres', render_kw={'data_type': 'select2'})
+    tags = SelectMultipleField('Tags', render_kw={'data_type': 'select2'})
+    sort = SelectField('Sort By')
 
 class DeleteObjForm(FlaskForm):
     obj_id = HiddenField('Object id', validators=[DataRequired()])
