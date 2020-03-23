@@ -44,6 +44,11 @@
 				<a href="{{ url_for('auth.profile', username=fiction.author.username) }}">
 					{{ fiction.author.username }}
 				</a><br />
+
+				{% for genre in fiction.genres %}
+					<i class="{{ genre.icon }}"></i>
+					{{ genre.name }}
+				{% endfor %}
 			</p>
 
 		<hr />
