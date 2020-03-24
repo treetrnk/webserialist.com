@@ -95,4 +95,6 @@ a.rate-star:hover {
 	color: #000;
 	border: 1px solid #ddd;
 }
-
+.fieldlist-card {
+  background-color: rgba(125,125,125, 0.04);
+}
