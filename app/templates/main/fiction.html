@@ -13,22 +13,26 @@
 
 		<img src="https://cor-cdn-static.bibliocommons.com/assets/default_covers/icon-book-93409e4decdf10c55296c91a97ac2653.png" class="img-responsive" width="100%"/>
 
-    <a href="{{ fiction.website }}" class="btn btn-block btn-lg btn-primary mt-3 mb-3">
-      <i class="fas fa-book-reader"></i>
-      Read It Here
-    </a>
+    {% if fiction.links %}
+      <a href="{{ fiction.links[0].url }}" class="btn btn-block btn-lg btn-primary mt-3 mb-3">
+        <i class="fas fa-book-reader"></i>
+        Read It Here
+      </a>
+    {% endif %}
 
-    <h3>Other Links</h3>
+    <h3>All Links</h3>
 
 		<ul>
-      {% for link in fiction.links %}
-        <li>
-          <a href="{{ link.url }}">
-            {{ link.domain() }}
-            <i class="fas fa-external-link-alt"></i>
-          </a>
-        </li>
-      {% endfor %}
+      {# if fiction.links|length > 1 #}
+        {% for link in fiction.links %}
+          <li>
+            <a href="{{ link.url }}">
+              {{ link.domain() }}
+              <i class="fas fa-external-link-alt"></i>
+            </a>
+          </li>
+        {% endfor %}
+      {# endif #}
 		</ul>
 
 	</div>
