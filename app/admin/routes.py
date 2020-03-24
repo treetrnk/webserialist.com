@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for
+from flask import render_template, redirect, flash, url_for, current_app
 from app import db
 from app.admin import bp
 from flask_login import login_required, current_user
@@ -9,7 +9,7 @@ from app.admin.forms import (
         GenreEditForm, GroupEditForm, TagEditForm, SubmissionEditForm,
     )
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.models import Subscriber, User, Fiction, Genre, Group, Tag, Submission, Comment
+from app.models import Subscriber, User, Fiction, Genre, Group, Tag, Submission, Comment, Link
 
 ##########
 ## USER ##
@@ -237,7 +237,7 @@ bp.add_url_rule("/admin/fictions/delete",
 def submissions(status='pending'):
     if status == 'approved':
         submissions = Submission.query.filter_by(approval=True).all()
-    elif status == 'approved':
+    elif status == 'rejected':
         submissions = Submission.query.filter_by(approval=False).all()
     else:
         submissions = Submission.query.filter_by(approval=None).all()
@@ -293,13 +293,15 @@ def edit_submission(obj_id):
     submission = Submission.query.filter_by(id=obj_id).first()
     form = SubmissionEditForm()
     if form.validate_on_submit():
+
+        for field in form:
+            current_app.logger.debug(f'{field.name}: {field.data}')
         comment = Comment(
                 user_id = current_user.id,
                 submission_id = submission.id,
                 text = form.comment.data,
             )
-        db.session.add(comment)
-        if form.approve.data == 'True':
+        if form.approve.data == True:
             fiction = Fiction(
                     title = submission.title,
                     subtitle = submission.subtitle,
@@ -317,16 +319,27 @@ def edit_submission(obj_id):
                     approval_date = datetime.utcnow(),
                     updater_id = submission.updater_id,
                 )
-            db.session.add(fiction)
+
             submission.approval = True
             submission.approval_date = datetime.utcnow()
             submission.approver_id = current_user.id
-            flash("Submission approved!", "succeess")
+            comment.text += " *Submission approved!*"
+            flash("Submission approved!", "success")
+            db.session.add(fiction)
+            db.session.commit()
+            for link in submission.links:
+                new_link = Link(
+                        url = link.url,
+                        fiction_id = fiction.id,
+                    )
+                db.session.add(new_link)
         else:
             submission.approval = False
             submission.approval_date = datetime.utcnow()
             submission.approver_id = current_user.id
-            flash("Submission rejected. :(", "succeess")
+            comment.text += " *Your submission was rejected.*"
+            flash("Submission rejected. :(", "success")
+        db.session.add(comment)
         db.session.commit()
         return redirect(url_for('admin.submissions'))
 

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<a href="{{ url_for('main.add_submission') }}" class="btn btn-secondary float-right">
+  <i class="fas fa-plus"></i>
+  New Submission
+</a>
+
 <h1>My Submissions</h1>
 
 <table class="table table-hover table-striped">
@@ -22,7 +27,7 @@
 					{{ submission.snippet() }}
 				</td>
 				<td>
-					{{ submission.approval if submission.approval else 'Pending' }}
+          {{ submission.text_approval() }}
 				</td>
 				<td class="text-center">
 					<a href="{{ url_for('main.edit_submission', obj_id=submission.id) }}" class="btn btn-primary btn-sm">

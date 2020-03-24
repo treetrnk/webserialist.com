@@ -322,6 +322,14 @@ class Submission(db.Model):
     updated = db.Column(db.DateTime, default=datetime.utcnow, 
                         onupdate=datetime.utcnow, nullable=False)
 
+    def text_approval(self):
+        if self.approval == True:
+            return 'Approved'
+        if self.approval == False:
+            return 'Rejected'
+        return 'Pending'
+
+
     def html(self):
         output = ''
         if self.synopsis:
