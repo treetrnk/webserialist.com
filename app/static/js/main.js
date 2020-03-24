@@ -99,4 +99,12 @@ $(document).ready(function() {
 		}
 	});
 
+  $(document).on('change', '[id*=-default]', function() {
+    var $this = $(this);
+    $('[id*=-default]').each(function() {
+      $(this).prop("checked", false);
+    });
+    $this.prop("checked", true);
+  });
+
 });
