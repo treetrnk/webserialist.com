@@ -2,13 +2,14 @@ from flask import render_template, redirect, flash, url_for
 from app import db
 from app.admin import bp
 from flask_login import login_required, current_user
+from datetime import datetime
 from app.auth.authenticators import group_required
 from app.admin.forms import (
         FictionEditForm, SubscriberEditForm, UserEditForm,
         GenreEditForm, GroupEditForm, TagEditForm, SubmissionEditForm,
     )
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.models import Subscriber, User, Fiction, Genre, Group, Tag, Submission
+from app.models import Subscriber, User, Fiction, Genre, Group, Tag, Submission, Comment
 
 ##########
 ## USER ##
@@ -286,12 +287,53 @@ bp.add_url_rule("/admin/submissions/add",
 #bp.add_url_rule("/admin/submissions/edit/<int:obj_id>", 
 #        view_func=group_required('admin')(EditSubmission.as_view('edit_submission')))
 
-@bp.route('/admin/submissions/edit/<int:obj_id>')
+@bp.route('/admin/submissions/edit/<int:obj_id>', methods=['GET','POST'])
 @group_required('admin')
 def edit_submission(obj_id):
     submission = Submission.query.filter_by(id=obj_id).first()
+    form = SubmissionEditForm()
+    if form.validate_on_submit():
+        comment = Comment(
+                user_id = current_user.id,
+                submission_id = submission.id,
+                text = form.comment.data,
+            )
+        db.session.add(comment)
+        if form.approve.data == 'True':
+            fiction = Fiction(
+                    title = submission.title,
+                    subtitle = submission.subtitle,
+                    synopsis = submission.synopsis,
+                    cover_img = submission.cover_img,
+                    banner_img = submission.banner_img,
+                    genres = submission.genres,
+                    tags = submission.tags,
+                    rating = submission.rating,
+                    words = submission.words,
+                    author_id = submission.author_id,
+                    status = submission.status,
+                    frequency = submission.frequency,
+                    approver_id = current_user.id,
+                    approval_date = datetime.utcnow(),
+                    updater_id = submission.updater_id,
+                )
+            db.session.add(fiction)
+            submission.approval = True
+            submission.approval_date = datetime.utcnow()
+            submission.approver_id = current_user.id
+            flash("Submission approved!", "succeess")
+        else:
+            submission.approval = False
+            submission.approval_date = datetime.utcnow()
+            submission.approver_id = current_user.id
+            flash("Submission rejected. :(", "succeess")
+        db.session.commit()
+        return redirect(url_for('admin.submissions'))
+
+    form.comment.data = "Thanks for the submission!"
     return render_template('admin/edit-submission.html',
             submission=submission,
+            form=form,
         )
 
 class DeleteSubmission(DeleteObjView):

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (
         StringField, TextAreaField, SelectField, IntegerField, 
-        BooleanField, SelectMultipleField, 
+        BooleanField, SelectMultipleField, SubmitField,
         PasswordField, HiddenField, FileField,
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
@@ -54,7 +54,8 @@ class FictionEditForm(FlaskForm):
     status = SelectField('Status')
 
 class SubmissionEditForm(FlaskForm):
-    pass
+    comment = TextAreaField('Comment', validators=[Length(max=5000)])
+    approve = SubmitField('Approve')
 
 class SubscriberEditForm(FlaskForm):
     pass

@@ -46,5 +46,54 @@
 			{% endfor %}
 		</ul>
 
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-sm-10 col">
+
+        <form action="" method="post">
+          {{ form.hidden_tag() }}
+
+          <div class="form-group row">
+            <div class="col">
+              {{ form.comment.label(class="control-label") }}
+              {% if form.comment.errors %}
+                {{ form.comment(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.comment.errors %}
+                    <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                {{ form.comment(class="form-control") }}
+              {% endif %}
+              {{ form.comment.form_text }}
+              {% if form.comment.description %}
+                {{ form.comment.description|safe }}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <button type="submit" name="accept" value="True" class="btn btn-primary btn-lg">
+                <i class="fas fa-check"></i>
+                Approve
+              </button>
+              {{ form.accept }}
+              <a href="{{ url_for('admin.submissions') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-ban"></i>
+                Cancel
+              </a>
+            </div>
+            <div class="col text-right">
+              <button type="submit" name="accept" value="False" class="btn btn-danger btn-lg">
+                <i class="fas fa-times"></i>
+                Reject
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
 
 {% endblock %}

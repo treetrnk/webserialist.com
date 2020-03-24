@@ -351,9 +351,9 @@ class Submission(db.Model):
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fiction_id = db.Column(db.Integer, db.ForeignKey('fiction.id'))
-    fiction = db.relationship('Fiction', backref=backref('links', order_by='Link.default'))
+    fiction = db.relationship('Fiction', backref=backref('links', order_by=desc('default')))
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
-    submission = db.relationship('Submission', backref=backref('links', order_by='Link.default'))
+    submission = db.relationship('Submission', backref=backref('links', order_by=desc('default')))
     url = db.Column(db.String(500), nullable=False)
     default = db.Column(db.Boolean)
 
@@ -364,7 +364,7 @@ class Link(db.Model):
         self.default = True
 
     def domain(self):
-        return urlparse(self.url).netloc
+        return urlparse(self.url).netloc.replace('www.','')
 
     def __str__(self):
         return f"{self.url[0:20]}..."
