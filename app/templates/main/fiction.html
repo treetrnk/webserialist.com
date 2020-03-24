@@ -21,12 +21,14 @@
     <h3>Other Links</h3>
 
 		<ul>
-			<li>
-				<a href="{{ fiction.website }}">
-          <i class="fas fa-external-link-alt"></i>
-					{{ fiction.website_domain() }}
-				</a>
-			</li>
+      {% for link in fiction.links %}
+        <li>
+          <a href="{{ link.url }}">
+            {{ link.domain() }}
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        </li>
+      {% endfor %}
 		</ul>
 
 	</div>

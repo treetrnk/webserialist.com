@@ -372,7 +372,8 @@ class Link(db.Model):
         self.default = True
 
     def domain(self):
-        return urlparse(self.url).netloc.replace('www.','')
+        domain = urlparse(self.url).netloc.replace('www.','')
+        return domain[0].upper() + domain[1:]
 
     def __str__(self):
         return f"{self.url[0:20]}..."
