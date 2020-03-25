@@ -39,6 +39,9 @@ ol.breadcrumb {
 .table {
   color: #aaa;
 }
+.table tbody tr:hover {
+  color: #999;
+}
 .table td, .table th {
   border-top: 1px solid #1c1c1c;
 }
