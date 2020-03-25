@@ -8,12 +8,13 @@
 
 <h1>My Submissions</h1>
 
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped datatable">
 	<thead>
 		<tr>
 			<th>Title</th>
 			<th>Synopsis</th>
 			<th>Status</th>
+			<th>Response</th>
 			<th width="75">Actions</th>
 		</tr>
 	</thead>
@@ -21,18 +22,48 @@
 		{% for submission in submissions %}
 			<tr>
 				<td>
-					{{ submission.title }}
+          {% if submission.approval %}
+            <a href="{{ url_for('main.fiction', obj_id=submission.fiction_id, slug=submission.title) }}">
+          {% endif %}
+              {{ submission.title }}
+            </a>
 				</td>
 				<td>
 					{{ submission.snippet() }}
 				</td>
-				<td>
+        <td class="{% if submission.approval %}text-success{% elif submission.approval == False %}text-danger{% endif %}">
           {{ submission.text_approval() }}
+          {% if submission.approval %}
+            <a href="{{ url_for('main.fiction', obj_id=submission.fiction_id, slug=submission.title) }}">
+              <small>
+                View it here
+              </small>
+            </a>
+          {% endif %}
 				</td>
+        <td>
+          {% if submission.comments %}
+            {{ submission.comments[0].text }}
+            <p class="text-right">
+              {% with user = submission.comments[0].user %}
+                - 
+                <a href="{{ url_for('auth.profile', username=user.username) }}">
+                  {{ user.username }}
+                </a>
+              {% endwith %}
+              <br />
+              <small>
+                ({{ moment(submission.comments[0].created).fromNow() }})
+              </small>
+            </p>
+          {% endif %}
+        </td>
 				<td class="text-center">
-					<a href="{{ url_for('main.edit_submission', obj_id=submission.id) }}" class="btn btn-primary btn-sm">
-						<i class="fas fa-edit"></i>
-					</a>
+          {% if not submission.approval %}
+            <a href="{{ url_for('main.edit_submission', obj_id=submission.id) }}" class="btn btn-primary btn-sm">
+              <i class="fas fa-edit"></i>
+            </a>
+          {% endif %}
 				</td>
 			</tr>
 		{% endfor %}

@@ -327,6 +327,7 @@ def edit_submission(obj_id):
             flash("Submission approved!", "success")
             db.session.add(fiction)
             db.session.commit()
+            submission.fiction_id = fiction.id
             for link in submission.links:
                 new_link = Link(
                         url = link.url,
