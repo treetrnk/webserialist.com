@@ -49,6 +49,23 @@
     <div class="row justify-content-center">
       <div class="col-md-8 col-sm-10 col">
 
+        <h3>Comments</h3>
+        {% for comment in submission.comments[::-1] %}
+        
+          <div class="card mb-3">
+            <div class="card-body">
+              <small class="float-right text-muted">
+                {{ moment(comment.created).fromNow() }}
+              </small>
+              <h6><a href="{{ url_for('auth.profile', username=comment.user.username) }}">
+                  {{ comment.user.username }}
+                </a>said:</h6>
+              {{ comment.text }}
+            </div>
+          </div>
+
+        {% endfor %}
+
         <form action="" method="post">
           {{ form.hidden_tag() }}
 
