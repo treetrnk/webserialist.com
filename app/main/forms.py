@@ -32,6 +32,10 @@ class SubmissionEditForm(FlaskForm):
             render_kw={'data_type': 'select2'}, 
             description="<small class='text-muted'>Pick up to two genres.</small>", 
             query_factory=all_genres)
+    tags = QuerySelectMultipleField('Tags', 
+            render_kw={'data_type': 'select2'}, 
+            description="<small class='text-muted'>Pick up to ten tags.</small>", 
+            query_factory=all_tags)
     links = FieldList(FormField(LinkAddForm), min_entries=1, max_entries=5, label=f'Links{required}')
     #website = StringField('URL', validators=[DataRequired(), Length(max=300)])
     #author_placeholder = StringField('Author')
@@ -42,7 +46,11 @@ class SubmissionEditForm(FlaskForm):
 
     def validate_genres(self, genres):
         if len(self.genres.data) > 2:
-            raise ValidationError('You can only pick up to two genres')
+            raise ValidationError('You can only pick up to two genres.')
+
+    def validate_tags(self, tags):
+        if len(self.tags.data) > 2:
+            raise ValidationError('You can only pick up to ten tags.')
 
 class FictionEditForm(FlaskForm):
     cover_img = FileField('Cover Image')
