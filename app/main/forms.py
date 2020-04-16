@@ -18,6 +18,11 @@ def all_tags():
     return Tag.query.order_by('name').all()
 
 class LinkAddForm(FlaskForm):
+    fiction_id = HiddenField('fiction id', validators=[DataRequired()])
+    url = StringField('URL', validators=[Length(max=500), URL()], render_kw={'placeholder': 'https://'})
+    default = BooleanField('Default Link?')
+
+class LinkForm(FlaskForm):
     #id = HiddenField('id', render_kw={'class': 'child-id'})
     url = StringField('URL', validators=[Length(max=500), URL()], render_kw={'placeholder': 'https://'})
     default = BooleanField('Default Link?')
@@ -36,7 +41,7 @@ class SubmissionEditForm(FlaskForm):
             render_kw={'data_type': 'select2'}, 
             description="<small class='text-muted'>Pick up to ten tags.</small>", 
             query_factory=all_tags)
-    links = FieldList(FormField(LinkAddForm), min_entries=1, max_entries=5, label=f'Links{required}')
+    links = FieldList(FormField(LinkForm), min_entries=1, max_entries=5, label=f'Links{required}')
     #website = StringField('URL', validators=[DataRequired(), Length(max=300)])
     #author_placeholder = StringField('Author')
     status = SelectField(f'Status{required}')

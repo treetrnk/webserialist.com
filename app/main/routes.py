@@ -4,7 +4,7 @@ from app.main import bp
 from flask_login import login_required, current_user
 from app.auth.authenticators import group_required
 from app.main.generic_views import SaveObjView, DeleteObjView
-from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm, FictionSearchForm
+from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm, FictionSearchForm, LinkAddForm
 from app.models import Fiction, Subscriber, View, Rating, Submission, Genre, Tag, Link
 from sqlalchemy import func
 
@@ -217,6 +217,7 @@ class EditSubmission(SaveObjView):
     success_msg = 'Submission updated.'
     delete_endpoint = 'main.delete_submission'
     template = 'object-edit.html'
+    add_child_endpoint = 'main.add_submission_link'
     redirect = {'endpoint': 'auth.profile'}
 
     def extra(self):
@@ -237,6 +238,23 @@ class DeleteSubmission(DeleteObjView):
 
 bp.add_url_rule("/submission/delete", 
         view_func = login_required(DeleteSubmission.as_view('delete_submission')))
+
+class AddSubmissionLink(SaveObjView):
+    title = "Add Submission Link"
+    model = Link
+    form = LinkAddForm
+    action = 'Add'
+    log_msg = 'added a submission link'
+    success_msg = 'Submission link added.'
+    delete_endpoint = 'main.delete_link'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        self.form.fiction_id.data = self.parent_id
+
+bp.add_url_rule("/submission/link/add", 
+        view_func=login_required(AddSubmissionLink.as_view('add_submission_link')))
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"
