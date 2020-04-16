@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from datetime import datetime
 from app.auth.authenticators import group_required
 from app.admin.forms import (
-        FictionEditForm, SubscriberEditForm, UserEditForm,
+        FictionEditForm, SubscriberEditForm, UserEditForm, LinkAddForm,
         GenreEditForm, GroupEditForm, TagEditForm, SubmissionEditForm,
     )
 from app.main.generic_views import SaveObjView, DeleteObjView
@@ -202,6 +202,10 @@ class AddFiction(SaveObjView):
     redirect = {'endpoint': 'admin.fictions'}
     context = {'tab': 'fictions'}
 
+    def extra(self):
+        self.form.author_id.choices = [(u.id, f'{u.first_name} {u.last_name}') for u in User.query.filter_by(active=True).all()] 
+        self.form.status.choices = Fiction.STATUS_CHOICES
+
 bp.add_url_rule("/admin/fictions/add", 
         view_func=group_required('admin')(AddFiction.as_view('add_fiction')))
 
@@ -215,7 +219,12 @@ class EditFiction(SaveObjView):
     delete_endpoint = 'admin.delete_fiction'
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.fictions'}
+    add_child_endpoint = 'admin.add_fiction_link'
     context = {'tab': 'fictions'}
+
+    def extra(self):
+        self.form.author_id.choices = [(u.id, f'{u.first_name} {u.last_name}') for u in User.query.filter_by(active=True).all()] 
+        self.form.status.choices = Fiction.STATUS_CHOICES
 
 bp.add_url_rule("/admin/fictions/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))
@@ -228,6 +237,24 @@ class DeleteFiction(DeleteObjView):
 
 bp.add_url_rule("/admin/fictions/delete", 
         view_func = group_required('admin')(DeleteFiction.as_view('delete_fiction')))
+
+class AddFictionLink(SaveObjView):
+    title = "Add Fiction Link"
+    model = Link
+    form = LinkAddForm
+    action = 'Add'
+    log_msg = 'added a fiction link'
+    success_msg = 'Fiction link added.'
+    delete_endpoint = 'admin.delete_fiction_link'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'admin.fictions'}
+    context = {'tab': 'fictions'}
+
+    def extra(self):
+        self.form.fiction_id.data = self.parent_id
+
+bp.add_url_rule("/admin/fictions/add/link", 
+        view_func=group_required('admin')(AddFictionLink.as_view('add_fiction_link')))
 
 ################
 ## SUBMISSION ##

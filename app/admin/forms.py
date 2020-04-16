@@ -1,17 +1,23 @@
 from flask_wtf import FlaskForm
 from wtforms import (
         StringField, TextAreaField, SelectField, IntegerField, 
-        BooleanField, SelectMultipleField, SubmitField,
-        PasswordField, HiddenField, FileField,
+        BooleanField, SelectMultipleField, SubmitField, FormField,
+        PasswordField, HiddenField, FileField, FieldList,
 )
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, ValidationError
-from app.models import Group
+from wtforms.validators import DataRequired, Length, Email, Optional, EqualTo, ValidationError, URL
+from app.models import Group, Fiction, Genre, Tag
 
 required = "<span class='text-danger'>*</span>"
 
 def all_groups():
     return Group.query.order_by('name').all()
+
+def all_genres():
+    return Genre.query.order_by('name').all()
+
+def all_tags():
+    return Tag.query.order_by('name').all()
 
 # Add forms here
 class UserEditForm(FlaskForm):
@@ -41,12 +47,24 @@ class GenreEditForm(FlaskForm):
 class TagEditForm(FlaskForm):
     name = StringField('Name', validators=[Length(max=50)])
 
+class LinkAddForm(FlaskForm):
+    fiction_id = HiddenField('fiction id', validators=[DataRequired()])
+    url = StringField('URL', validators=[Length(max=500), URL()], render_kw={'placeholder': 'https://'})
+    default = BooleanField('Default Link?')
+
+class LinkForm(FlaskForm):
+    #id = HiddenField('id', render_kw={'class': 'child-id'})
+    url = StringField('URL', validators=[Length(max=500), URL()], render_kw={'placeholder': 'https://'})
+    default = BooleanField('Default Link?')
+
 class FictionEditForm(FlaskForm):
     title = StringField('Title', validators=[Length(max=150),DataRequired()])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
     synopsis = TextAreaField('Synopsis', validators=[Length(max=1000), DataRequired()])
-    cover_img = FileField('Cover Image')
-    genres = QuerySelectMultipleField('Genres', validators=[Length(max=2)])
+    #cover_img = FileField('Cover Image')
+    genres = QuerySelectMultipleField('Genres', query_factory=all_genres, validators=[Length(max=2)], render_kw={'data_type': 'select2'})
+    tags = QuerySelectMultipleField('Tags', query_factory=all_tags, render_kw={'data_type': 'select2'})
+    links = FieldList(FormField(LinkForm), min_entries=1, max_entries=5, label=f'Links{required}')
     words = IntegerField('Word Count')
     website = StringField('Website', validators=[Length(max=300)])
     author_placeholder = StringField('Author Placeholder', validators=[Length(max=100)])

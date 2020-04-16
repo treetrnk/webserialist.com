@@ -49,6 +49,7 @@ class SaveObjView(MethodView):
     redirect = None
     model_name = None
     delete_endpoint = None
+    add_child_endpoint = None
     context = {}
 
     def __init__(self): #, **kwargs):
@@ -68,6 +69,8 @@ class SaveObjView(MethodView):
             self.context.update({'redirect': self.redirect})
         if self.delete_endpoint:
             self.context.update({'delete_endpoint': self.delete_endpoint})
+        if self.add_child_endpoint:
+            self.context.update({'add_child_endpoint': self.add_child_endpoint})
 
 
     def set_object(self, obj_id):
