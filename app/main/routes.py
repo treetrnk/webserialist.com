@@ -315,3 +315,12 @@ class DeleteSubscriber(DeleteObjView):
 bp.add_url_rule("/unsubscribe", 
         view_func = login_required(DeleteSubscriber.as_view('unsubscribe')))
 
+@bp.app_errorhandler(404)
+@login_required
+def handle_404(e):
+    return render_template("404-error.html", title="Page not found")
+
+@bp.app_errorhandler(500)
+@login_required
+def handle_500(e):
+    return render_template("500-error.html", title="Internal Server Error", error=e)

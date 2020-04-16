@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>500 Error</h1>
+
+<div class="text-center big-icon">
+  &#128562;
+</div>
+
+<p>
+Something went wrong! Please refresh the previous page and trying again. If the problem persists, please let the developer know.
+</p>
+
+{% if config.get('DEBUG') %}
+  <h2>Error</h2>
+  {{ error }}
+{% endif %}
+
+{% endblock %}
