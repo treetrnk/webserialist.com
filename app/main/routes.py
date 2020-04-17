@@ -79,6 +79,8 @@ def fiction(obj_id, slug=''):
 @login_required # DELETE WHEN READY
 def top_stories(source=None, sort=None):
     top_rated = Fiction.query.order_by(Fiction.rating.desc()).limit(10).all()
+    popular_fictions = Fiction.query.all()
+    random_fictions = Fiction.query.order_by(func.random()).all()
     if sort == 'random':
         fictions = Fiction.query.order_by(func.random()).all()
     else:
@@ -92,6 +94,8 @@ def top_stories(source=None, sort=None):
                 fictions = fictions,
                 sort = sort,
                 top_rated=top_rated,
+                popular_fictions=popular_fictions,
+                random_fictions=random_fictions,
 
         )
 
