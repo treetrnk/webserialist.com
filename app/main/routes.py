@@ -78,6 +78,7 @@ def fiction(obj_id, slug=''):
 @bp.route('/top')
 @login_required # DELETE WHEN READY
 def top_stories(source=None, sort=None):
+    top_rated = Fiction.query.order_by(Fiction.rating.desc()).limit(10).all()
     if sort == 'random':
         fictions = Fiction.query.order_by(func.random()).all()
     else:
@@ -90,6 +91,8 @@ def top_stories(source=None, sort=None):
                 title = 'Top Stories',
                 fictions = fictions,
                 sort = sort,
+                top_rated=top_rated,
+
         )
 
 @bp.route('/top/random')
