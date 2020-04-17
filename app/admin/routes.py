@@ -205,6 +205,11 @@ class AddFiction(SaveObjView):
     def extra(self):
         self.form.author_id.choices = [(u.id, f'{u.first_name} {u.last_name}') for u in User.query.filter_by(active=True).all()] 
         self.form.status.choices = Fiction.STATUS_CHOICES
+        self.form.rating.choices = Fiction.RATING_CHOICES
+
+    def pre_post(self):
+        for entry in self.form.links.entries:
+            self.obj.links.append(Link())
 
 bp.add_url_rule("/admin/fictions/add", 
         view_func=group_required('admin')(AddFiction.as_view('add_fiction')))
@@ -225,6 +230,7 @@ class EditFiction(SaveObjView):
     def extra(self):
         self.form.author_id.choices = [(u.id, f'{u.first_name} {u.last_name}') for u in User.query.filter_by(active=True).all()] 
         self.form.status.choices = Fiction.STATUS_CHOICES
+        self.form.rating.choices = Fiction.RATING_CHOICES
 
 bp.add_url_rule("/admin/fictions/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))
@@ -295,6 +301,11 @@ class AddSubmission(SaveObjView):
     template = 'object-edit.html'
     redirect = {'endpoint': 'admin.submissions'}
     context = {'tab': 'submissions'}
+
+    def extra(self):
+        self.form.author_id.choices = [(u.id, f'{u.first_name} {u.last_name}') for u in User.query.filter_by(active=True).all()] 
+        self.form.status.choices = Fiction.STATUS_CHOICES
+        self.form.rating.choices = Fiction.RATING_CHOICES
 
 bp.add_url_rule("/admin/submissions/add", 
         view_func=group_required('admin')(AddSubmission.as_view('add_submission')))

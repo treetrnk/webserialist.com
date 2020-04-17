@@ -42,6 +42,7 @@ class SubmissionEditForm(FlaskForm):
             description="<small class='text-muted'>Pick up to ten tags.</small>", 
             query_factory=all_tags)
     links = FieldList(FormField(LinkForm), min_entries=1, max_entries=5, label=f'Links{required}')
+    rating = SelectField(f'Rating{required}', validators=[DataRequired()])
     #website = StringField('URL', validators=[DataRequired(), Length(max=300)])
     #author_placeholder = StringField('Author')
     status = SelectField(f'Status{required}')

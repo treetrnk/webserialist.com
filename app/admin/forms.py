@@ -65,6 +65,7 @@ class FictionEditForm(FlaskForm):
     genres = QuerySelectMultipleField('Genres', query_factory=all_genres, validators=[Length(max=2)], render_kw={'data_type': 'select2'})
     tags = QuerySelectMultipleField('Tags', query_factory=all_tags, render_kw={'data_type': 'select2'})
     links = FieldList(FormField(LinkForm), min_entries=1, max_entries=5, label=f'Links{required}')
+    rating = SelectField(f'Rating{required}', validators=[DataRequired()])
     words = IntegerField('Word Count')
     website = StringField('Website', validators=[Length(max=300)])
     author_placeholder = StringField('Author Placeholder', validators=[Length(max=100)])

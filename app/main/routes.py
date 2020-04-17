@@ -194,6 +194,7 @@ class AddSubmission(SaveObjView):
     def extra(self):
         current_app.logger.debug(self.form.__dict__)
         self.form.status.choices = Fiction.STATUS_CHOICES
+        self.form.rating.choices = Fiction.RATING_CHOICES
     
     def pre_post(self):
         for entry in self.form.links.entries:
@@ -222,10 +223,11 @@ class EditSubmission(SaveObjView):
 
     def extra(self):
         self.form.status.choices = Fiction.STATUS_CHOICES
+        self.form.rating.choices = Fiction.RATING_CHOICES
 
-    def pre_post(self):
-        for entry in self.form.links.entries:
-            self.obj.links.append(Link())
+    #def pre_post(self):
+    #    for entry in self.form.links.entries:
+    #        self.obj.links.append(Link())
 
 bp.add_url_rule("/submission/edit/<int:obj_id>", 
         view_func=login_required(EditSubmission.as_view('edit_submission')))
