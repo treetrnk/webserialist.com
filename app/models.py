@@ -199,6 +199,12 @@ class Fiction(db.Model):
     author = db.relationship("User", foreign_keys=[author_id], backref='fictions')
     status = db.Column(db.String(75), nullable=False)
     frequency = db.Column(db.Float) # releases per month
+    rating_average = db.Column(db.Float)
+    total_views = db.Column(db.Integer)
+    weekly_views = db.Column(db.Integer)
+    rank = db.Column(db.Integer)
+    weekly_votes = db.Column(db.Integer)
+    total_votes = db.Column(db.Integer)
     approval = db.Column(db.Boolean, default=None)
     approval_date = db.Column(db.DateTime, default=None) # True, False, None
     approver_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Fix. 2 user ids
@@ -235,6 +241,14 @@ class Fiction(db.Model):
             ('random', 'Random Order'),
         ]
 
+    def update_rating(self):
+        ratings = Rating.query.filter_by(fiction_id = self.id).all()
+        total = 0
+        if ratings:
+            for rating in ratings:
+                total += rating.stars
+            self.rating_average = total / len(ratings)
+
     def html(self):
         output = ''
         if self.synopsis:
@@ -250,12 +264,14 @@ class Fiction(db.Model):
         pattern = re.compile(r'<.*?>')
         return pattern.sub('', self.html())
 
+    """
     def view_count(self, limit=None):
         if limit == 'unique':
             views = View.query.filter_by(fiction_id=self.id).with_entities(View.session_id).distinct().all()
         else: 
             views = self.views
         return len(views)
+    """
 
     def snippet(self, length=150):
         output = self.html()
@@ -267,15 +283,19 @@ class Fiction(db.Model):
         return output
 
     def average_rating(self, return_type=None):
-        ratings = Rating.query.filter_by(fiction_id=self.id).with_entities(func.avg(Rating.stars).label('average')).all()
-        if ratings[0][0]:
-            current_app.logger.debug(int(ratings[0][0]))
-        not_available = None
-        if return_type == 'text':
-            not_available = 'No ratings yet'
+        if return_type == 'stars':
+            output = ''
+            star_num = 0.5
+            for i in range(0,5):
+                if self.rating_average and self.rating_average >= star_num:
+                    output += "<i class='fas fa-star text-yellow'></i>"
+                else:
+                    output += "<i class='fas fa-star text-muted'></i>"
+                star_num += 1.0
+            return output
         elif return_type == 'float':
-            not_available = 0
-        return ratings[0][0] if ratings[0][0] else not_available
+            return self.rating_average if self.rating_average else 0
+        return self.rating_average if self.rating_average else 'No ratings yet'
 
     def simple_frequency(self):
         return str(self.frequency).rstrip('0').rstrip('.')

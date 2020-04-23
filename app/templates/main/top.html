@@ -21,29 +21,13 @@
 <div class="card">
   <div class="card-body">
     
-    <h1 class="mb-4">Top Rated Stories</h1>
+    <h1 class="mb-4">Top Rated Fiction</h1>
     <div class="p-2" style="overflow-x: auto;">
       <div class="row" style="width:1750px;">
         
         {% for fiction in top_rated %}
           <div class="col">
-            <a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
-              <h4>
-                {{ fiction.title }}
-              </h4>
-              <h6 class="text-muted">
-                {{ fiction.subtitle }}
-              </h6>
-            </a>
-            {% for genre in fiction.genres %}
-            <i class="{{ genre.icon }} jquery-tooltip" title="{{ genre.name }}"></i>
-            {% endfor %}
-            {% if fiction.rating %}
-              &nbsp;&nbsp;
-              {{ fiction.rating }}
-              &nbsp;&nbsp;
-              {{ fiction.average_rating('text') }}
-            {% endif %}
+            {% include 'main/fiction-card.html' %}
           </div>
         {% endfor %}
 
@@ -60,29 +44,13 @@
     <div class="card">
       <div class="card-body">
       
-        <h1 class="mb-4">
-          Popular Stories
-        </h1>
+        <h2 class="mb-4">
+          Popular Fictions
+        </h2>
 
         {% for fiction in popular_fictions %}
           <div class="border-bottom p-2 border-secondary">
-            <a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
-              <h4>
-                {{ fiction.title }}
-              </h4>
-              <h6 class="text-muted">
-                {{ fiction.subtitle }}
-              </h6>
-            </a>
-            {% for genre in fiction.genres %}
-            <i class="{{ genre.icon }} jquery-tooltip" title="{{ genre.name }}"></i>
-            {% endfor %}
-            {% if fiction.rating %}
-              &nbsp;&nbsp;
-              {{ fiction.rating }}
-              &nbsp;&nbsp;
-              {{ fiction.average_rating('text') }}
-            {% endif %}
+            {% include 'main/fiction-card.html' %}
           </div>
         {% endfor %}
 
@@ -95,29 +63,32 @@
     <div class="card">
       <div class="card-body">
       
-        <h1 class="mb-4">
+        <h2 class="mb-4">
+          Most Weekly Votes
+        </h2>
+
+        {% for fiction in voted_fictions %}
+          <div class="border-bottom p-2 border-secondary">
+            {% include 'main/fiction-card.html' %}
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+  </div>
+  <div class="col">
+
+    <div class="card">
+      <div class="card-body">
+      
+        <h2 class="mb-4">
           Random Fictions
-        </h1>
+        </h2>
 
         {% for fiction in random_fictions %}
           <div class="border-bottom p-2 border-secondary">
-            <a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
-              <h4>
-                {{ fiction.title }}
-              </h4>
-              <h6 class="text-muted">
-                {{ fiction.subtitle }}
-              </h6>
-            </a>
-            {% for genre in fiction.genres %}
-            <i class="{{ genre.icon }} jquery-tooltip" title="{{ genre.name }}"></i>
-            {% endfor %}
-            {% if fiction.rating %}
-              &nbsp;&nbsp;
-              {{ fiction.rating }}
-              &nbsp;&nbsp;
-              {{ fiction.average_rating('text') }}
-            {% endif %}
+            {% include 'main/fiction-card.html' %}
           </div>
         {% endfor %}
 

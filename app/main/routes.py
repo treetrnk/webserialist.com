@@ -29,6 +29,7 @@ def rate(obj_id, stars):
             )
         db.session.add(rating)
         flash('Your rating has been added.', 'success')
+    fiction.update_rating()
     db.session.commit()
     return redirect(url_for('main.fiction', obj_id=fiction.id))
 
@@ -69,7 +70,7 @@ def fiction(obj_id, slug=''):
         rating = Rating.query.filter_by(user_id=current_user.id,fiction_id=fiction.id).first()
 
     current_app.logger.debug('VIEWS')
-    current_app.logger.debug(fiction.view_count())
+    current_app.logger.debug(fiction.total_views)
     return render_template('main/fiction.html',
             fiction=fiction,
             rating=rating,
@@ -78,8 +79,9 @@ def fiction(obj_id, slug=''):
 @bp.route('/top')
 @login_required # DELETE WHEN READY
 def top_stories(source=None, sort=None):
-    top_rated = Fiction.query.order_by(Fiction.rating.desc()).limit(10).all()
-    popular_fictions = Fiction.query.all()
+    top_rated = Fiction.query.order_by(Fiction.rating_average.desc()).limit(10).all()
+    popular_fictions = Fiction.query.order_by(Fiction.weekly_views.desc()).all()
+    voted_fictions = Fiction.query.order_by(Fiction.weekly_votes.desc()).all()
     random_fictions = Fiction.query.order_by(func.random()).all()
     if sort == 'random':
         fictions = Fiction.query.order_by(func.random()).all()
@@ -95,6 +97,7 @@ def top_stories(source=None, sort=None):
                 sort = sort,
                 top_rated=top_rated,
                 popular_fictions=popular_fictions,
+                voted_fictions=voted_fictions,
                 random_fictions=random_fictions,
 
         )
