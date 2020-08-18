@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class='float-right'>
+<div class='ml-auto' style="max-width: 400px;">
 	<div class='row'>
 		<label class="col-from-label col-md-3 mt-2 text-right">Source:</label>
 		<div class="col">
@@ -18,20 +18,18 @@
 
 <br /><br />
 
-<div class="card">
+<div class="card clearfix">
   <div class="card-body">
     
     <h1 class="mb-4">Top Rated Fiction</h1>
     <div class="p-2" style="overflow-x: auto;">
-      <div class="row" style="width:1750px;">
         
         {% for fiction in top_rated %}
-          <div class="col">
+          <div class="sidescroll-card">
             {% include 'main/fiction-card.html' %}
           </div>
         {% endfor %}
 
-      </div>
     </div>
 
   </div>
@@ -39,7 +37,7 @@
 
 
 <div class="row mt-4">
-  <div class="col">
+  <div class="col-12 col-md-4 mb-4">
 
     <div class="card card-gray">
       <div class="card-body">
@@ -60,7 +58,7 @@
     </div>
 
   </div>
-  <div class="col">
+  <div class="col-12 col-md-4 mb-4">
 
     <div class="card">
       <div class="card-body">
@@ -82,7 +80,7 @@
     </div>
 
   </div>
-  <div class="col">
+  <div class="col-12 col-md-4 mb-4">
 
     <div class="card">
       <div class="card-body">
@@ -92,7 +90,7 @@
         </h2>
 
         {% for fiction in random_fictions %}
-          <div class="border-bottom p-2 border-secondary">
+					<div class="p-2">
             {% include 'main/fiction-card.html' %}
           </div>
         {% endfor %}

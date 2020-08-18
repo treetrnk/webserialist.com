@@ -288,7 +288,7 @@ class Fiction(db.Model):
             star_num = 0.5
             for i in range(0,5):
                 if self.rating_average and self.rating_average >= star_num:
-                    output += "<i class='fas fa-star text-yellow'></i>"
+                    output += "<i class='fas fa-star text-primary'></i>"
                 else:
                     output += "<i class='fas fa-star text-muted'></i>"
                 star_num += 1.0

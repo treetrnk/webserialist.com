@@ -30,6 +30,9 @@ body {
   background: #fafafa;
 	border: 0px;
 }
+.sidescroll-card {
+	max-width: 600px;
+}
 a.rate-star {
   color: #ccc;
   text-decoration: none;
