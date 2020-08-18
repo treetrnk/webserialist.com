@@ -27,7 +27,8 @@ body {
   max-height: 30px;
 }
 .card {
-  background: rgba(125,125,125,0.13);
+  background: #fafafa;
+	border: 0px;
 }
 a.rate-star {
   color: #ccc;

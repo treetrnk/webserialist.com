@@ -41,18 +41,20 @@
 <div class="row mt-4">
   <div class="col">
 
-    <div class="card">
+    <div class="card card-gray">
       <div class="card-body">
       
         <h2 class="mb-4">
-          Popular Fictions
+          Popular Fiction
         </h2>
 
-        {% for fiction in popular_fictions %}
+					<p class="text-muted">Coming soon!</p>
+
+        {# for fiction in popular_fictions %}
           <div class="border-bottom p-2 border-secondary">
             {% include 'main/fiction-card.html' %}
           </div>
-        {% endfor %}
+        {% endfor #}
 
       </div>
     </div>
@@ -67,11 +69,14 @@
           Most Weekly Votes
         </h2>
 
-        {% for fiction in voted_fictions %}
+
+					<p class="text-muted">Coming soon!</p>
+
+        {# for fiction in voted_fictions %}
           <div class="border-bottom p-2 border-secondary">
             {% include 'main/fiction-card.html' %}
           </div>
-        {% endfor %}
+        {% endfor #}
 
       </div>
     </div>
@@ -83,7 +88,7 @@
       <div class="card-body">
       
         <h2 class="mb-4">
-          Random Fictions
+          Random Fiction
         </h2>
 
         {% for fiction in random_fictions %}

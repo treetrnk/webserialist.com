@@ -1,24 +1,18 @@
-<div class="card">
-  <div class="card-body">
-
-    <a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
-      <h4>
-        {{ fiction.title }}
-      </h4>
-      <h6 class="text-muted">
-        {{ fiction.subtitle }}
-      </h6>
-    </a>
-    {% for genre in fiction.genres %}
-    <i class="{{ genre.icon }} jquery-tooltip" title="{{ genre.name }}"></i>
-    {% endfor %}
-    {% if fiction.rating %}
-      &nbsp;&nbsp;
-      {{ fiction.rating }}
-    {% endif %}
-    <br />
-    {{ fiction.average_rating('stars')|safe }}
-    &nbsp;&nbsp;
-
-  </div>
-</div>
+<a href="{{ url_for('main.fiction', obj_id=fiction.id) }}">
+	<h4>
+		{{ fiction.title }}
+	</h4>
+	<h6 class="text-muted">
+		{{ fiction.subtitle }}
+	</h6>
+</a>
+{% for genre in fiction.genres %}
+<i class="{{ genre.icon }} jquery-tooltip" title="{{ genre.name }}"></i>
+{% endfor %}
+{% if fiction.rating %}
+	&nbsp;&nbsp;
+	{{ fiction.rating }}
+{% endif %}
+<br />
+{{ fiction.average_rating('stars')|safe }}
+&nbsp;&nbsp;

@@ -99,7 +99,7 @@ def top_stories(source=None, sort=None):
                 popular_fictions=popular_fictions,
                 voted_fictions=voted_fictions,
                 random_fictions=random_fictions,
-
+                fluid=True,
         )
 
 @bp.route('/top/random')

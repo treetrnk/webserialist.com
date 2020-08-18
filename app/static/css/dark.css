@@ -11,6 +11,7 @@ body {
 .card {
   background-color: #222;
   color: #aaa;
+	border: 0px;
 }
 .dropdown-menu {
   background: #343a40;
