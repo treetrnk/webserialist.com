@@ -53,6 +53,16 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+    def validate_username(self, username):
+        user = User.query.filter_by(username = self.username.data).first()
+        if not user:
+            raise ValidationError("The username {self.username.data} doesn't exist. Please sign up for a new account if you don't already have one.")
+
+    def validate_password(self, password):
+        user = User.query.filter_by(username = self.username.data).first()
+        if not user.check_password(self.password.data):
+            raise ValidationError('Incorrect password for this account.')
+
 class ProfileEditForm(FlaskForm):
     #username = StringField(f'Username{required}', validators=[DataRequired(), Length(max=64)])
     #email = StringField(f'Email{required}', validators=[Length(max=120), Email()])

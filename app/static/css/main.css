@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #fff;
+  background-color: #fafafa;
 }
 .navbar .navbar-brand {
   font-family: 'Anonymous Pro', monospace;
@@ -18,6 +18,7 @@ h1,h2,h3,h4,h5,h6 {
 body {
   margin-top: 100px;
   font-family: 'Open Sans', sans-serif;
+  color: #fafafa;
 }
 .text-purple {
   color: #5f00ad;
@@ -27,12 +28,19 @@ body {
   max-height: 30px;
 }
 .card {
-  background: #fafafa;
-	border: 0px;
+  background: #fff;
+	border: 1px solid rgba(175,175,175,0.4);
 	box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
 }
+.sidescroll-box {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  max-height: 300px;
+  white-space: nowrap;
+}
 .sidescroll-card {
-	max-width: 600px;
+	max-width: 400px;
+  display: inline-block;
 }
 a.rate-star {
   color: #ccc;
@@ -102,4 +110,18 @@ a.rate-star:hover {
 }
 .fieldlist-card {
   background-color: rgba(125,125,125, 0.04);
+}
+.dev-banner {
+	background-color: rgba(200,0,0,0.6);
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	position: fixed;
+	top: 76px;
+	height: 20px;
+	z-index: 1030;
+}
+.dev-banner h6 {
+  color: #fff;
 }

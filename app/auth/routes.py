@@ -119,6 +119,14 @@ class EditProfile(SaveObjView):
     redirect = {'endpoint': 'auth.profile'}
     obj = current_user
 
+    def pre_post(self):
+        if self.form.current_password.data and self.form.confirm_password.data and self.form.new_password.data:
+            if self.obj.check_password(self.form.current_password.data):
+                self.obj.set_password(self.form.new_password.data)
+
+    def post_post(self):
+        session['theme'] = self.form.theme.data
+
 bp.add_url_rule("/profile/edit", 
         view_func=login_required(EditProfile.as_view('edit_profile')))
 

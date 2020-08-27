@@ -155,6 +155,12 @@
 			</div>
 		</nav>
 
+		{% if config['DEVELOPMENT'] %}
+			<div class="dev-banner">
+				<h6 class="text-center">DEVELOPMENT SERVER</h6>
+			</div>
+		{% endif %}
+
 		<!-- Modal -->
 		<div class="modal fade" id="searchMod" tabindex="-1" role="dialog" aria-labelledby="searchModLabel">
 			<div class="modal-dialog" role="document">

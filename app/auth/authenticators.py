@@ -22,7 +22,7 @@ def group_required(groups, fail_redirect=None):
                         " group to access to this page.\n")
                 current_app.logger.warning(message)
                 flash(f'You are not authorized to visit that page!<br /><small>Groups allowed: <b>{groups}</b></small>', 'danger')
-                return redirect(url_for('auth.login')) if not fail_redirect else fail_redirect
+                return redirect(url_for('main.top_stories')) if not fail_redirect else fail_redirect
             return func(*args, **kwargs)
         return wrapper
     return decorator
