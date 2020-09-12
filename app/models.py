@@ -186,7 +186,9 @@ class Fiction(db.Model):
     subtitle = db.Column(db.String(150))
     synopsis = db.Column(db.String(1000), nullable=False)
     cover_img = db.Column(db.String(500))
+    pending_cover_img = db.Column(db.String(500))
     banner_img = db.Column(db.String(500))
+    pending_banner_img = db.Column(db.String(500))
     genres = db.relationship('Genre', secondary=fiction_genres, lazy='subquery', 
             backref=db.backref('fictions', lazy=True))
     tags = db.relationship('Tag', secondary=fiction_tags, lazy='subquery', 

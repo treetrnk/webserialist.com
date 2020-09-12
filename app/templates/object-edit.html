@@ -9,112 +9,7 @@
 		<form method="post" action="">
 			{{ form.hidden_tag() }}
 
-			{% for field in form if field.widget.input_type != 'hidden' %}
-
-				<div class="form-group row">
-					{{ field.label(class="col-form-label col-md-3 text-md-right") }}
-					<div class="col">
-						{% if field.type == 'FieldList' %}
-							
-							<div class="fieldlist">
-
-								{% for entry in field.entries %}
-									<div class="card mb-3 fieldlist-card">
-										<div class="card-body" style="position: relative">
-											{{ entry.form.hidden_tag() }}
-
-											<button type="button" class="jquery-tooltip text-center fieldlist-remove rounded-circle btn btn-danger btn-sm {% if action == 'Edit' %}ajax-delete{% endif %}" title="Remove" aria-label="Close" style="position: absolute;top:-10px;right:-15px;width:30px;{% if field.entries|length < 2 %}display: none;{% endif %}">
-												<i class="fas fa-times text-light"></i>
-											</button>
-											{% for f in entry.form if f.widget.input_type != 'hidden' %}
-												<div class="form-group row">
-													{{ f.label(class="col-form-label col-md-2 text-md-right") }}
-													<div class="col">
-														{% if f.errors %}
-															{% if f.type == 'BooleanField' %}
-																{{ f(class="is-invalid") }}
-															{% else %}
-																{{ f(class="form-control is-invalid") }}
-															{% endif %}
-															<div class="invalid-feedback">
-																{% for error in f.errors %}
-																	<span>{{ error }}</span>
-																{% endfor %}
-															</div>
-														{% else %}
-															{% if f.type == 'BooleanField' %}
-																{{ f }}
-															{% else %}
-																{{ f(class="form-control") }}
-															{% endif %}
-														{% endif %}
-														{{ f.form_text }}
-														{% if f.description %}
-															{{ f.description|safe }}
-														{% endif %}
-													</div>
-												</div>
-											{% endfor %}
-
-										</div>
-									</div>
-								{% endfor %}
-							</div>
-
-							<div class="row">
-								<div class="col">
-									{% if action == 'Edit' and current_user.in_group('admin') %}
-										<a href="{{ url_for(add_child_endpoint, parent_id = obj.id) }}" class="btn btn-block btn-sm btn-outline-success">
-											<i class="fas fa-plus"></i> 
-                      Add More {{ field.label.text|safe }}
-										</a>
-									{% else %}
-										<button type="button" class="btn btn-block btn-sm btn-outline-success fieldlist-add">
-											<i class="fas fa-plus"></i> 
-											Add More {{ field.name.title() }}
-										</button>
-									{% endif %}
-								</div>
-							</div>
-
-							{% if field.errors %}
-								<div class="invalid-feedback">
-									{% for error in field.errors %}
-										<span>{{ error }}</span>
-									{% endfor %}
-								</div>
-							{% endif %}
-
-              {% else %} {# ========== NOT A FIELD LIST ========== #}
-
-							{% if field.errors %}
-                {% if field.type == 'BooleanField' %}
-                  {{ field(class="is-invalid") }}
-                {% else %}
-                  {{ field(class="form-control is-invalid") }}
-                {% endif %}
-								<div class="invalid-feedback">
-									{% for error in field.errors %}
-										<span>{{ error }}</span>
-									{% endfor %}
-								</div>
-							{% else %}
-                {% if field.type == 'BooleanField' %}
-                  {{ field() }}
-                {% else %}
-                  {{ field(class="form-control") }}
-                {% endif %}
-							{% endif %}
-							{{ field.form_text }}
-							{% if field.description %}
-								{{ field.description|safe }}
-							{% endif %}
-
-						{% endif %}
-					</div>
-				</div>
-
-			{% endfor %}
+      {% include 'form-fields.html' %}
 
 			<div class="row">
 				<div class="col-md-3"></div>
@@ -127,7 +22,7 @@
 						<i class="fas fa-ban"></i>
 						Cancel
 					</a>
-					{% if action == 'Edit' and current_user.is_authenticated and current_user.in_group('admin') %}
+					{% if action == 'Edit' and current_user.in_group('admin') %}
 						<button type='button' class="btn btn-danger delete-btn float-right" data-id="{{ obj.id }}">
 								<i class="fas fa-trash-alt"></i>
 								Delete
@@ -139,7 +34,7 @@
 		</form>
 	</div>
 </div>
-{% if action == 'Edit' and current_user.is_authenticated and current_user.in_group('admin') %}
+{% if action == 'Edit' and current_user.in_group('admin') %}
 	<form action="{{ url_for(delete_endpoint) }}" id="delete{{ obj.id }}" method="post">
 		{{ delete_form.hidden_tag() }}
 	</form>

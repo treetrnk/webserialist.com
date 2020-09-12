@@ -13,6 +13,7 @@ def group_required(groups, fail_redirect=None):
                 flash(f'Your account has been deactivated. If there is a problem, please contact support@webserialist.com', 'danger')
                 current_app.logger.warning(f"Authentication Failure: {current_user.username}'s account is inactive.")
                 return redirect(url_for('auth.logout'))
+
             if not current_user.in_group(groups):
                 message = ("Permissions Warning:\n"    
                         f"    url = {request.url}\n"

@@ -1,7 +1,7 @@
 from flask import render_template, redirect, current_app, url_for, flash, request
 from flask.views import View, MethodView
-from flask_login import login_required, current_user
-from app.main.functions import log_new, log_change, log_form, flash_form_errors
+from flask_login import login_required
+from app.functions import log_new, log_change, log_form, flash_form_errors
 from app.main.forms import DeleteObjForm
 from app import db
 
@@ -73,17 +73,20 @@ class SaveObjView(MethodView):
             self.context.update({'add_child_endpoint': self.add_child_endpoint})
 
 
-    def set_object(self, obj_id):
+    def set_object(self, obj_id, parent_id):
         current_app.logger.debug(f'Form: {self.form()}')
+        self.obj_id = obj_id
         if obj_id and self.model:
             self.obj = self.model.query.filter_by(id=obj_id).first()
+        if parent_id:
+            self.parent_id = parent_id
         if self.form:
             if self.obj:
                 self.form = self.form(obj=self.obj)
             else:
                 self.form = self.form()
             if hasattr(self.form, 'obj_id'):
-                current_app.logger.info('THERE IS AN OBJ_ID')
+                current_app.logger.debug('THERE IS AN OBJ_ID')
                 self.form.obj_id.data = obj_id
             self.context.update({'form': self.form})
         if self.model and not self.obj:
@@ -96,43 +99,45 @@ class SaveObjView(MethodView):
     def extra(self): ## For extra case-by-case functionality
         pass
 
+    def pre_get(self):
+        pass
+
     def pre_post(self): ## For extra case-by-case functionality
         pass
 
     def post_post(self): ## For extra case-by-case functionality
         pass
 
-    def get(self, obj_id=None):
-        self.set_object(obj_id)
+    def post_submit(self): ## For extra case-by-case functionality
+        pass
+
+    def get(self, obj_id=None, parent_id=None):
+        self.set_object(obj_id, parent_id)
         self.extra()
+        self.pre_get()
         current_app.logger.debug(self.context)
         return render_template(self.template, **self.context)
 
-    def post(self, obj_id=None):
-        self.set_object(obj_id)
+    def post(self, obj_id=None, parent_id=None):
+        self.set_object(obj_id, parent_id)
         self.extra()
-        current_app.logger.info('POSTED========================================')
+        current_app.logger.debug('POSTED========================================')
         if self.form.validate_on_submit():
-            current_app.logger.info('VALIDATED========================================')
-            #for field in self.form:
-            #    current_app.logger.debug(f"{field.name}: {field.data}")
+            current_app.logger.debug('VALIDATED========================================')
             if self.action == 'Edit':
                 log_orig = log_change(self.obj)
                 self.pre_post()
                 self.form.populate_obj(self.obj)
-                if hasattr(self.obj, 'updater_id'):
-                    self.obj.updater_id = current_user.id
                 self.post_post()
                 log_change(log_orig, self.obj, self.log_msg)
             else:
                 self.pre_post()
                 self.form.populate_obj(self.obj)
-                if hasattr(self.obj, 'updater_id'):
-                    self.obj.updater_id = current_user.id
                 self.post_post()
                 db.session.add(self.obj)
                 log_new(self.obj, self.log_msg)
             db.session.commit()
+            self.post_submit()
             flash(self.success_msg, 'success')
             if self.redirect:
                 return redirect(url_for(**self.redirect))
@@ -145,22 +150,42 @@ class DeleteObjView(MethodView):
     model = None
     redirect = None
     log_msg = ''
+    form = DeleteObjForm
     success_msg = ''
 
     def extra(self):
         pass
 
-    def post(self):
+    def pre_post(self):
+        pass
+
+    def post_post(self):
+        pass
+
+    def post_submit(self):
+        pass
+
+    def post(self, parent_id=None):
         self.extra()
-        self.form = DeleteObjForm()
+        self.form = self.form()
         if self.form.validate_on_submit():
             self.obj = self.model.query.filter_by(id=self.form.obj_id.data).first()
             log_new(self.obj, self.log_msg)
+            self.pre_post()
             db.session.delete(self.obj)
+            self.post_post()
             db.session.commit()
+            self.post_submit()
             flash(self.success_msg, 'success')
         else:
-            flash('Failed to delete {self.model.__name__}!', 'danger')
+            flash(f'Failed to delete {self.model.__name__}!', 'danger')
         log_form(self.form)
         #flash_form_errors(self.form)
+        try:
+            if self.form.redirect.data:
+                return redirect(self.form.redirect.data)
+        except Exception as e:
+            current_app.logger.debug(e)
+        if parent_id:
+            return redirect(url_for(**self.redirect, obj_id=parent_id))
         return redirect(url_for(**self.redirect))

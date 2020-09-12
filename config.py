@@ -20,3 +20,4 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ['MAIL_USERNAME']
     MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
+    UPLOAD_DIR = os.path.join(os.path.dirname(basedir), 'uploads/')

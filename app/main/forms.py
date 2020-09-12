@@ -28,7 +28,7 @@ class LinkForm(FlaskForm):
     default = BooleanField('Default Link?')
 
 class SubmissionEditForm(FlaskForm):
-    #cover_img = FileField('Cover Image')
+    pending_cover_img = FileField('Cover Image', validators=[Length(max=500)])
     title = StringField(f'Title{required}', validators=[DataRequired(), Length(max=150)])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
     synopsis = TextAreaField(f'Synopsis{required}', validators=[DataRequired(), Length(max=1000)],
@@ -59,14 +59,14 @@ class SubmissionEditForm(FlaskForm):
             raise ValidationError('You can only pick up to ten tags.')
 
 class FictionEditForm(FlaskForm):
+    obj_id = HiddenField()
     cover_img = FileField('Cover Image')
     title = StringField('Title', validators=[DataRequired(), Length(max=150)])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
     synopsis = TextAreaField('Synopsis', validators=[DataRequired(), Length(max=1000)],
             render_kw={'rows': '6'})
     genres = QuerySelectMultipleField('Genres', render_kw={'data_type': 'select2'}, query_factory=all_genres)
-    website = StringField('URL', validators=[DataRequired(), Length(max=300)])
-    author_claim = BooleanField('Are you the Author?')
+    links = FieldList(FormField(LinkForm), max_entries=5, label=f'Links{required}')
     author_placeholder = StringField('Author')
     status = SelectField('Status')
     words = IntegerField('Current Word Count')

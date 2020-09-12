@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from app.auth.authenticators import group_required
 from app.main.generic_views import SaveObjView, DeleteObjView
 from app.main.forms import FictionEditForm, SubscribeForm, SubmissionEditForm, FictionSearchForm, LinkAddForm
+from app.functions import save_file
 from app.models import Fiction, Subscriber, View, Rating, Submission, Genre, Tag, Link
 from sqlalchemy import func
 
@@ -215,6 +216,9 @@ class AddSubmission(SaveObjView):
             self.obj.author_id = current_user.id
         self.obj.updater_id = current_user.id
         self.obj.submitter_id = current_user.id
+        if self.form.pending_cover_img.data:
+            path = save_file(self.form.pending_cover_img.data, self.obj.id, self.obj.name)
+            self.obj.pending_cover_img = path
 
 bp.add_url_rule("/submission/add", 
         view_func=login_required(AddSubmission.as_view('add_submission')))
@@ -234,6 +238,13 @@ class EditSubmission(SaveObjView):
     def extra(self):
         self.form.status.choices = Fiction.STATUS_CHOICES
         self.form.rating.choices = Fiction.RATING_CHOICES
+
+    def pre_post(self):
+        if self.form.pending_cover_img.data:
+            if self.obj.pending_cover_img:
+                delete_file(self.obj.image_path)
+            path = save_file(self.form.pending_cover_img.data, self.obj.id, self.obj.name)
+            self.obj.image_path = path
 
     #def pre_post(self):
     #    for entry in self.form.links.entries:
@@ -265,8 +276,25 @@ class AddSubmissionLink(SaveObjView):
     def extra(self):
         self.form.fiction_id.data = self.parent_id
 
-bp.add_url_rule("/submission/link/add", 
+bp.add_url_rule("/submission/link/add/<int:parent_id>", 
         view_func=login_required(AddSubmissionLink.as_view('add_submission_link')))
+
+class AddFictionLink(SaveObjView):
+    title = "Add Fiction Link"
+    model = Link
+    form = LinkAddForm
+    action = 'Add'
+    log_msg = 'added a fiction link'
+    success_msg = 'Fiction link added.'
+    delete_endpoint = 'main.delete_link'
+    template = 'object-edit.html'
+    redirect = {'endpoint': 'auth.profile'}
+
+    def extra(self):
+        self.form.fiction_id.data = self.parent_id
+
+bp.add_url_rule("/fiction/link/add/<int:parent_id>", 
+        view_func=login_required(AddFictionLink.as_view('add_fiction_link')))
 
 class AddFiction(SaveObjView):
     title = "Add Fiction"
@@ -303,6 +331,7 @@ class EditFiction(SaveObjView):
     log_msg = 'updated a fiction'
     success_msg = 'Fiction updated.'
     delete_endpoint = 'main.delete_fiction'
+    add_child_endpoint = 'main.add_fiction_link'
     template = 'object-edit.html'
     redirect = {'endpoint': 'auth.profile'}
 
