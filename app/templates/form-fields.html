@@ -44,16 +44,18 @@
 
           <div class="row">
             <div class="col">
-              {% if action == 'Edit' %}
-                <a href="{{ url_for(add_child_endpoint, parent_id=form.obj_id.data) }}" class="btn btn-block btn-sm btn-outline-success">
-                  <i class="fas fa-plus"></i> 
-                  Add More {{ field.label.text|safe }}
-                </a>
-              {% else %}
-                <button type="button" class="btn btn-block btn-sm btn-outline-success fieldlist-add">
-                  <i class="fas fa-plus"></i> 
-                  Add More {{ field.label.text }}
-                </button>
+              {% if field.entries|length < field.max_entries %}
+                {% if action == 'Edit' %}
+                  <a href="{{ url_for(add_child_endpoint, parent_id=form.obj_id.data) }}" class="btn btn-block btn-sm btn-outline-success">
+                    <i class="fas fa-plus"></i> 
+                    Add More {{ field.label.text|safe }}
+                  </a>
+                {% else %}
+                  <button type="button" class="btn btn-block btn-sm btn-outline-success fieldlist-add">
+                    <i class="fas fa-plus"></i> 
+                    Add More {{ field.label.text|safe }}
+                  </button>
+                {% endif %}
               {% endif %}
             </div>
           </div>

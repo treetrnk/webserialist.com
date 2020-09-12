@@ -238,6 +238,7 @@ class EditSubmission(SaveObjView):
     def extra(self):
         self.form.status.choices = Fiction.STATUS_CHOICES
         self.form.rating.choices = Fiction.RATING_CHOICES
+        self.form.obj_id.data = self.obj.id
 
     def pre_post(self):
         if self.form.pending_cover_img.data:
@@ -275,6 +276,8 @@ class AddSubmissionLink(SaveObjView):
 
     def extra(self):
         self.form.fiction_id.data = self.parent_id
+        if self.parent_id:
+            self.redirect = {'endpoint': 'main.edit_submission', 'obj_id': self.parent_id}
 
 bp.add_url_rule("/submission/link/add/<int:parent_id>", 
         view_func=login_required(AddSubmissionLink.as_view('add_submission_link')))
@@ -292,6 +295,12 @@ class AddFictionLink(SaveObjView):
 
     def extra(self):
         self.form.fiction_id.data = self.parent_id
+        if self.parent_id:
+            parent = Fiction.query.filter_by(id=self.parent_id).first()
+            if len(parent.links) >= 5:
+                self.error = True
+                self.error_message = 'You already have the maximum of five links'
+            self.redirect = {'endpoint': 'main.edit_fiction', 'obj_id': self.parent_id}
 
 bp.add_url_rule("/fiction/link/add/<int:parent_id>", 
         view_func=login_required(AddFictionLink.as_view('add_fiction_link')))
@@ -337,6 +346,7 @@ class EditFiction(SaveObjView):
 
     def extra(self):
         self.form.status.choices = Fiction.STATUS_CHOICES
+        current_app.logger.debug(self.form.links.max_entries)
 
 bp.add_url_rule("/fiction/edit/<int:obj_id>", 
         view_func=group_required('admin')(EditFiction.as_view('edit_fiction')))

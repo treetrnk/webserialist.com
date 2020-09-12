@@ -119,7 +119,7 @@ a.rate-star:hover {
 	position: fixed;
 	top: 76px;
 	height: 20px;
-	z-index: 1030;
+	z-index: 999;
 }
 .dev-banner h6 {
   color: #fff;

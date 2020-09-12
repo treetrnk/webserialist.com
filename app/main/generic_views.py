@@ -43,6 +43,9 @@ class SaveObjView(MethodView):
     form = None
     action = None
     log_msg = None
+    error = False
+    error_msg = None
+    error_level = None
     success_msg = None
     delete_form = None
     template = 'main/index.html'
@@ -115,12 +118,18 @@ class SaveObjView(MethodView):
         self.set_object(obj_id, parent_id)
         self.extra()
         self.pre_get()
+        if self.error:
+            flash(self.error_msg, self.error_level)
+            return redirect(url_for(**self.redirect))
         current_app.logger.debug(self.context)
         return render_template(self.template, **self.context)
 
     def post(self, obj_id=None, parent_id=None):
         self.set_object(obj_id, parent_id)
         self.extra()
+        if self.error:
+            flash(self.error_msg, self.error_level)
+            return redirect(url_for(**self.redirect))
         current_app.logger.debug('POSTED========================================')
         if self.form.validate_on_submit():
             current_app.logger.debug('VALIDATED========================================')

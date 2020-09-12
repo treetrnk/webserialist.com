@@ -28,6 +28,7 @@ class LinkForm(FlaskForm):
     default = BooleanField('Default Link?')
 
 class SubmissionEditForm(FlaskForm):
+    obj_id = HiddenField()
     pending_cover_img = FileField('Cover Image', validators=[Length(max=500)])
     title = StringField(f'Title{required}', validators=[DataRequired(), Length(max=150)])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
@@ -58,19 +59,36 @@ class SubmissionEditForm(FlaskForm):
         if len(self.tags.data) > 2:
             raise ValidationError('You can only pick up to ten tags.')
 
+    def validate_links(self, genres):
+        if len(self.links.data) < 1:
+            raise ValidationError('You must provide at least one link.')
+        if len(self.links.data) > 5:
+            raise ValidationError('You can only provide up to five links.')
+
 class FictionEditForm(FlaskForm):
     obj_id = HiddenField()
-    cover_img = FileField('Cover Image')
+    pending_cover_img = FileField('Cover Image')
     title = StringField('Title', validators=[DataRequired(), Length(max=150)])
     subtitle = StringField('Subtitle', validators=[Length(max=150)])
     synopsis = TextAreaField('Synopsis', validators=[DataRequired(), Length(max=1000)],
             render_kw={'rows': '6'})
     genres = QuerySelectMultipleField('Genres', render_kw={'data_type': 'select2'}, query_factory=all_genres)
+    tags = QuerySelectMultipleField('Tags', 
+            render_kw={'data_type': 'select2'}, 
+            description="<small class='text-muted'>Pick up to ten tags.</small>", 
+            query_factory=all_tags)
     links = FieldList(FormField(LinkForm), max_entries=5, label=f'Links{required}')
-    author_placeholder = StringField('Author')
     status = SelectField('Status')
     words = IntegerField('Current Word Count')
     frequency = FloatField('Releases per Month')
+
+    def validate_genres(self, genres):
+        if len(self.genres.data) > 2:
+            raise ValidationError('You can only pick up to two genres.')
+
+    def validate_tags(self, tags):
+        if len(self.tags.data) > 10:
+            raise ValidationError('You can only pick up to ten tags.')
 
 class SubscribeForm(FlaskForm):
     email = StringField(f'Email Address{required}', validators=[Email(), DataRequired()])
