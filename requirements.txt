@@ -11,5 +11,5 @@ Mako==1.1.4
 MarkupSafe==2.0.1
 mysqlclient==2.0.3
 SQLAlchemy==1.4.17
-Werkzeug==2.0.1
+Werkzeug==2.2.3
 WTForms==2.3.3
